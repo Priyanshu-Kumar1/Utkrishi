@@ -80,6 +80,8 @@ jobs:
             libssl-dev \
             python3-dev \
             libcairo2-dev \
+            texlive-full \
+            sox \
             cargo \
             automake
 
