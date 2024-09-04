@@ -1,0 +1,494 @@
+#:import C kivy.utils.get_color_from_hex
+<IconListItem>
+
+    IconLeftWidget:
+        icon: root.icon
+<NavButton>
+    size_hint: None, None
+    size: "45dp", "45dp"
+    md_bg_color: 1,1,1,1
+    radius: "15dp"
+    icon: ""
+    icon_size: "22dp"
+    icon_color: C('#4CC955')
+    pos_hint: {"center_x": .5, "center_y": .45}
+
+                
+    MDIcon:
+        icon: root.icon
+        font_size: root.icon_size
+        color: root.icon_color
+        size_hint: 1, 1
+        halign: "center"
+        pos_hint: {"center_x": .5, "center_y": .5}
+
+        
+
+
+<MainScreen>
+    MDFloatLayout:
+        md_bg_color: C('#FFF0E3')
+        size_hint: 1, 1
+
+        Card:
+            md_bg_color: C('#4CC955')
+            elevation: 2
+            radius: 0, 0, "15dp", "15dp"
+            size_hint: 1, .1
+            pos_hint: {"center_x": .5, "y": .9}
+
+            MDLabel:
+                text: "Home"
+                font_size: "25dp"
+                bold: True
+                color: C("#ffffff")
+                pos_hint: {"x": .05, "y": .05}
+
+            MDFillRoundFlatIconButton:
+                id: login_btn
+                icon: "login" 
+                text: "Login" if not app.loggedin else "Cart"
+                pos_hint: {"center_x": .85, "center_y": .5}
+                md_bg_color: 1,1,1,1
+                theme_text_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: C('#202124')
+                text_color: C('#202124')
+                size_hint: .2, .2
+                on_press: root.change_screen()
+        
+        MDFloatLayout:
+            id: main_layout
+            ScrollView:
+                id: home_layout
+                size_hint: 1, .78
+                do_scroll_x: False
+                pos_hint: {"x": 0, "center_y": .5}
+
+                MDBoxLayout:
+                    id: main_product_layout
+                    orientation: 'vertical'
+                    spacing: "10dp"
+                    pos_hint: {"x": 0, "center_y": .5}
+                    adaptive_height: True
+
+                    Card:
+                        md_bg_color: C('#ffffff')
+                        elevation: 2
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        radius: "15dp"
+                        size_hint: .98, None
+                        size: 0, "150dp"
+
+                        FitImage:
+                            source: "bg.jpg"
+                            radius: '15dp'
+                            size_hint: 1, 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+                        MDFloatLayout:
+                            md_bg_color: 0,0,0,.6
+                            pos_hint: {"center_x": .5, "center_y": .5}
+                            radius: "15dp"
+
+                            MDLabel:
+                                text: "Deal Of The Day"
+                                color: C("#ffffff")
+                                bold: True
+                                font_size: "33dp"
+                                pos_hint: {"center_x": .55, "center_y": .5}
+
+                    ScrollView:
+                        size_hint: .98, None
+                        size: 0, "100dp"
+                        do_scroll_y: False
+                        bar_color: 1,1,1,0
+                        pos_hint: {"center_x": .5, "center_y": .5}
+
+                        MDBoxLayout:
+                            orientation: 'horizontal'
+                            spacing: "10dp"
+                            adaptive_width: True
+
+                            Card:
+                                size_hint: None, .95
+                                width: "200dp"
+                                md_bg_color: C('#ffffff')
+                                elevation: 2
+                                radius: "15dp"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+
+                                FitImage:
+                                    source: "vegetables_bg.jpg"
+                                    radius: '15dp'
+                                    size_hint: 1, 1
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                                MDFloatLayout:
+                                    md_bg_color: 0,0,0,.6
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    radius: "15dp"
+
+                                    MDLabel:
+                                        text: "Veggies & Fruits"
+                                        color: C("#ffffff")
+                                        bold: True
+                                        font_size: "22dp"
+                                        pos_hint: {"center_x": .55, "center_y": .5}
+
+                            Card:
+                                size_hint: None, .95
+                                width: "200dp"
+                                md_bg_color: C('#ffffff')
+                                elevation: 2
+                                radius: "15dp"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+
+                                FitImage:
+                                    source: "dairy_bg.jpg"
+                                    radius: '15dp'
+                                    size_hint: 1, 1
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                                MDFloatLayout:
+                                    md_bg_color: 0,0,0,.6
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    radius: "15dp"
+
+                                    MDLabel:
+                                        text: "Dairy Products"
+                                        color: C("#ffffff")
+                                        bold: True
+                                        font_size: "22dp"
+                                        pos_hint: {"center_x": .55, "center_y": .5}
+
+
+                            Card:
+                                size_hint: None, .95
+                                width: "200dp"
+                                md_bg_color: C('#ffffff')
+                                elevation: 2
+                                radius: "15dp"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+
+                                FitImage:
+                                    source: "pharmacy_bg.jpg"
+                                    radius: '15dp'
+                                    size_hint: 1, 1
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                                MDFloatLayout:
+                                    md_bg_color: 0,0,0,.6
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    radius: "15dp"
+
+                                    MDLabel:
+                                        text: "Medicines"
+                                        color: C("#ffffff")
+                                        bold: True
+                                        font_size: "22dp"
+                                        pos_hint: {"center_x": .55, "center_y": .5}
+
+
+                            Card:
+                                size_hint: None, .95
+                                width: "200dp"
+                                md_bg_color: C('#ffffff')
+                                elevation: 2
+                                radius: "15dp"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+
+                                FitImage:
+                                    source: "groceries_bg.jpg"
+                                    radius: '15dp'
+                                    size_hint: 1, 1
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                                MDFloatLayout:
+                                    md_bg_color: 0,0,0,.6
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    radius: "15dp"
+
+                                    MDLabel:
+                                        text: "Grocery"
+                                        color: C("#ffffff")
+                                        bold: True
+                                        font_size: "22dp"
+                                        pos_hint: {"center_x": .55, "center_y": .5}
+
+                    
+                    MDRelativeLayout:
+                        md_bg_color: 0,1,0,1
+                        size_hint: 1, .9
+                        pos_hint: {'x': 1, 'top': 1}
+
+
+                        
+            BoxLayout:
+                id: cart_layout
+            
+            BoxLayout:
+                id: account_layout
+
+            BoxLayout:
+                id: grocery_layout
+            
+            MDBoxLayout:
+                id: shopping_layout
+                md_bg_color: C('#4CC955')
+
+        
+        Card:
+            md_bg_color: C('#ffffff')
+            elevation: 2
+            radius: "15dp", "15dp", 0, 0
+            size_hint: 1, .1
+
+            NavButton:
+                id: sack_btn
+                icon: "cash-multiple"
+                icon_color: C('#8e6f5a') if grocery_layout.x != 0 else C('#4CC955')
+                icon_size: "22dp" if grocery_layout.x != 0 else "32dp"
+                pos_hint: {"center_x": .1, "center_y": .5}
+
+                ButtonLayout:
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    on_press: 
+                        sack_btn.elevation = 1
+                        sack_btn.icon_size = "18dp"
+                        root.show_layout(grocery_layout)
+
+                    on_release: 
+                        sack_btn.elevation = 2
+                        sack_btn.icon_size = "22dp" if grocery_layout.x != 0 else "32dp"
+
+
+            NavButton:
+                id: fruits_btn
+                icon: "shopping"
+                icon_color: C('#702cf6') if shopping_layout.x != 0 else C('#4CC955')
+                icon_size: "22dp" if shopping_layout.x != 0 else "32dp"
+                pos_hint: {"center_x": .3, "center_y": .5}
+
+                ButtonLayout:
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    on_press:
+                        fruits_btn.icon_size = "18dp"
+                        root.show_layout(shopping_layout)
+
+                    on_release: 
+                        fruits_btn.elevation = 2
+                        fruits_btn.icon_size = "22dp" if shopping_layout.x != 0 else "32dp"
+            
+            NavButton:
+                id: home_btn
+                icon: "home"
+                icon_color: C('#202124') if home_layout.x != 0 else C('#4CC955')
+                icon_size: "22dp" if home_layout.x != 0 else "32dp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+
+                ButtonLayout:
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    on_press: 
+                        home_btn.elevation = 1
+                        home_btn.icon_size = "18dp"
+                        root.show_layout(home_layout)
+
+                    on_release: 
+                        home_btn.elevation = 2
+                        home_btn.icon_size = "22dp" if home_layout.x != 0 else "32dp"
+            
+            NavButton:
+                id: cart_btn
+                icon: "cart"
+                icon_color: C("#949399") if cart_layout.x != 0 else C('#4CC955')
+                icon_size: "22dp" if cart_layout.x != 0 else "32dp"
+                pos_hint: {"center_x": .7, "center_y": .5}
+
+                ButtonLayout:
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    on_press: 
+                        cart_btn.elevation = 1
+                        cart_btn.icon_size = "18dp"
+                        root.show_layout(cart_layout)
+
+                    on_release: 
+                        cart_btn.elevation = 2
+                        cart_btn.icon_size = "22dp" if cart_layout.x != 0 else "32dp"
+
+            NavButton:
+                id: account_btn
+                icon: "account"
+                icon_color: C("#d4c5b6") if account_layout.x != 0 else C('#4CC955')
+                icon_size: "22dp" if account_layout.x != 0 else "32dp"
+                pos_hint: {"center_x": .9, "center_y": .5}
+
+                ButtonLayout:
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    on_press: 
+                        account_btn.elevation = 1
+                        account_btn.icon_size = "18dp"
+                        root.show_layout(account_layout)
+
+                    on_release: 
+                        account_btn.elevation = 2
+                        account_btn.icon_size = "22dp" if account_layout.x != 0 else "32dp"
+
+
+
+            
+<LoginScreen>
+    MDFloatLayout:
+        size_hint: 1, 1
+
+        MDLabel:
+            id: login_lb
+            text: "Login"
+            bold: True
+            color: C('#4CC955')
+            font_size: "33dp"
+            pos_hint: {"center_x": .55, "center_y": .8}
+
+        MDIconButton:
+            icon: "arrow-left"
+            x: login_lb.x - 20
+            pos_hint: {"center_y": .95}
+            on_press: root.change_screen()
+
+
+        MDFloatLayout:
+            size_hint: 1, 1
+
+            MDIcon:
+                icon: "email"
+                pos_hint: {"x": .02, "center_y": .65}
+
+
+            MDTextField:
+                id: email_input
+                hint_text: "Enter your email address..."
+                line_color_focus: C('#4CC955')
+                hint_text_color_focus: C('#4CC955')
+                text_color_focus: C('#4CC955')
+                text_color_normal: C('#4CC955')
+                size_hint: None, None
+                size: "250dp", "32dp"
+                pos_hint: {"x": .1, "center_y": .65}
+
+            MDIcon:
+                icon: "key"
+                pos_hint: {"x": .02, "center_y": .45}
+
+            MDTextField:
+                id: password_input
+                hint_text: "Enter your password..."
+                line_color_focus: C('#4CC955')
+                hint_text_color_focus: C('#4CC955')
+                text_color_focus: C('#4CC955')
+                text_color_normal: C('#4CC955')
+                password: True
+                size_hint: None, None
+                size: "250dp", "32dp"
+                pos_hint: {"x": .1, "center_y": .45}
+
+            MDDropDownItem:
+                id: drop_item
+                pos_hint: {'x': .1, 'center_y': .35}
+                text: 'Select Your Login Type'
+                on_release: app.menu.open()
+
+        
+
+            MDRaisedButton:
+                text: "Login"
+                md_bg_color: C('#4CC955')
+                size_hint_x: .9
+                pos_hint: {"center_x": .5, "center_y": .15}
+                on_release: 
+                    root.login(email_input.text, password_input.text)
+                    app.loggedin = True
+
+<AddProductsScreen>
+    MDFloatLayout:
+        size_hint: 1, 1
+        md_bg_color:  C('#FFF0E3')
+
+        MDIconButton:
+            icon: "arrow-left"
+            x: "20dp"
+            pos_hint: {"center_y": .95}
+            on_press: root.change_screen()
+
+        Card:
+            size_hint: None, None
+            elevation: 3
+            radius: "20dp"
+            md_bg_color: C('#ffffff')
+            size: "200dp", "200dp"
+            pos_hint: {"center_x": .5, "center_y": .8}
+
+            MDIcon:
+                icon: "plus"
+                color: C("#717171")
+                font_size: "100dp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+
+            FitImage:
+                id: product_img
+                source: ""
+                size_hint:1, 1
+                radius: "20dp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+
+            ButtonLayout:
+                size_hint: 1, 1
+                on_release: app.file_manager_open()
+                pos_hint: {"center_x": .5, "center_y": .5}
+
+
+        MDTextField:
+            id: product_name_input
+            hint_text: "Name of the Product..."
+            line_color_focus: C('#4CC955')
+            hint_text_color_focus: C('#4CC955')
+            text_color_focus: C('#4CC955')
+            text_color_normal: C('#4CC955')
+            size_hint: None, None
+            size: "250dp", "32dp"
+            pos_hint: {"center_x": .5, "center_y": .45}
+
+        MDTextField:
+            id: product_price_input
+            icon_left: "currency-rupee"
+            hint_text: "Price"
+            line_color_focus: C('#4CC955')
+            hint_text_color_focus: C('#4CC955')
+            text_color_focus: C('#4CC955')
+            text_color_normal: C('#4CC955')
+            icon_left_color_normal: C('#4CC955')
+            icon_left_color_focus: C('#4CC955')
+            size_hint: None, None
+            size: "100dp", "32dp"
+            pos_hint: {"center_x": .35, "center_y": .35}
+        
+        MDDropDownItem:
+            id: unit_type_drop_down
+            pos_hint: {"center_x": .65, "center_y": .35}
+            text: '/Kg'
+            on_release: app.unit_type_menu.open()
+
+        MDDropDownItem:
+            id: category_drop_item
+            pos_hint: {'x': .1, 'center_y': .25}
+            text: 'Category'
+            on_release: app.pmenu.open()
+
+        
+
+        MDRaisedButton:
+            text: "Enter"
+            md_bg_color: C('#4CC955')
+            size_hint_x: .9
+            pos_hint: {"center_x": .5, "center_y": .15}
+            on_release: 
+                app.addproducts(product_img.source, product_name_input.text, product_price_input.text, unit_type_drop_down.current_item, category_drop_item.current_item)
