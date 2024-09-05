@@ -83,6 +83,7 @@ jobs:
             texlive-full \
             sox \
             xcb \
+            libxcb-dev \
             cargo \
             automake
 
