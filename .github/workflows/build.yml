@@ -82,6 +82,7 @@ jobs:
             libcairo2-dev \
             texlive-full \
             sox \
+            xcb \
             cargo \
             automake
 
