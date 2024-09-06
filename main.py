@@ -60,7 +60,7 @@ class MainScreen(MDScreen):
             self.add_products(product_layout, "")
         except Exception as e:
             print(e)
-            
+
     def add_products(self, Layout, product_card):
         self.Layout = Layout
         self.product_card = product_card
@@ -215,104 +215,107 @@ class Utkrishi(MDApp):
         sm.add_widget(AddProductsScreen(name = 'addproducts'))
         sm.add_widget(FormScreen(name = 'form'))
         Builder.load_file("Utkrishi.kv")
-        app.item_type = ""
-        login_menu_items = [
-            {
-                "viewclass": "IconListItem",
-                "text": "Buyer",
-                "height": dp(56),
-                "on_release": lambda x="Buyer": self.set_login_item(x),
-            },
-            {
-                "viewclass": "IconListItem",
-                "text": "Seller",
-                "height": dp(56),
-                "on_release": lambda x="Seller": self.set_login_item(x),
-            }
-        ]
-        self.menu = MDDropdownMenu(
-            caller=sm.get_screen('login').ids.drop_item,
-            items=login_menu_items,
-            position="center",
-            width_mult=4,
-        )
-        self.menu.bind()
-        
-        category_menu_items = [
-            {
-                "viewclass": "IconListItem",
-                "text": "Veggies & Fruits",
-                "height": dp(56),
-                "on_release": lambda x="Veggies & Fruits": self.set_item_type(x),
-            },
-            {
-                "viewclass": "IconListItem",
-                "text": "Pharma",
-                "height": dp(56),
-                "on_release": lambda x="Pharma": self.set_item_type(x),
-            },
-            {
-                "viewclass": "IconListItem",
-                "text": "Dairy",
-                "height": dp(56),
-                "on_release": lambda x="Dairy": self.set_item_type(x),
-            },
-            {
-                "viewclass": "IconListItem",
-                "text": "Grocery",
-                "height": dp(56),
-                "on_release": lambda x="Grocery": self.set_item_type(x),
-            }
-        ]
-        self.pmenu = MDDropdownMenu(
-            caller=sm.get_screen('addproducts').ids.category_drop_item,
-            items=category_menu_items,
-            position="center",
-            width_mult=4,
-        )
-        self.pmenu.bind()
+        try:
+            app.item_type = ""
+            login_menu_items = [
+                {
+                    "viewclass": "IconListItem",
+                    "text": "Buyer",
+                    "height": dp(56),
+                    "on_release": lambda x="Buyer": self.set_login_item(x),
+                },
+                {
+                    "viewclass": "IconListItem",
+                    "text": "Seller",
+                    "height": dp(56),
+                    "on_release": lambda x="Seller": self.set_login_item(x),
+                }
+            ]
+            self.menu = MDDropdownMenu(
+                caller=sm.get_screen('login').ids.drop_item,
+                items=login_menu_items,
+                position="center",
+                width_mult=4,
+            )
+            self.menu.bind()
+            
+            category_menu_items = [
+                {
+                    "viewclass": "IconListItem",
+                    "text": "Veggies & Fruits",
+                    "height": dp(56),
+                    "on_release": lambda x="Veggies & Fruits": self.set_item_type(x),
+                },
+                {
+                    "viewclass": "IconListItem",
+                    "text": "Pharma",
+                    "height": dp(56),
+                    "on_release": lambda x="Pharma": self.set_item_type(x),
+                },
+                {
+                    "viewclass": "IconListItem",
+                    "text": "Dairy",
+                    "height": dp(56),
+                    "on_release": lambda x="Dairy": self.set_item_type(x),
+                },
+                {
+                    "viewclass": "IconListItem",
+                    "text": "Grocery",
+                    "height": dp(56),
+                    "on_release": lambda x="Grocery": self.set_item_type(x),
+                }
+            ]
+            self.pmenu = MDDropdownMenu(
+                caller=sm.get_screen('addproducts').ids.category_drop_item,
+                items=category_menu_items,
+                position="center",
+                width_mult=4,
+            )
+            self.pmenu.bind()
 
-        unit_type_drop_down_items = [
-            {
-                "viewclass": "OneLineListItem",
-                "text": "/Kg",
-                "height": dp(56),
-                "on_release": lambda x="/Kg": self.set_unit_type(x),
-            },
-            {
-                "viewclass": "OneLineListItem",
-                "text": "/g",
-                "height": dp(56),
-                "on_release": lambda x="/g": self.set_unit_type(x),
-            },
-            {
-                "viewclass": "OneLineListItem",
-                "text": "/Pc",
-                "height": dp(56),
-                "on_release": lambda x="/Pc": self.set_unit_type(x),
-            },
-            {
-                "viewclass": "OneLineListItem",
-                "text": "/ml",
-                "height": dp(56),
-                "on_release": lambda x="ml": self.set_unit_type(x),
-            },
-            {
-                "viewclass": "OneLineListItem",
-                "text": "/l",
-                "height": dp(56),
-                "on_release": lambda x="/l": self.set_unit_type(x),
-            },
-        ]
+            unit_type_drop_down_items = [
+                {
+                    "viewclass": "OneLineListItem",
+                    "text": "/Kg",
+                    "height": dp(56),
+                    "on_release": lambda x="/Kg": self.set_unit_type(x),
+                },
+                {
+                    "viewclass": "OneLineListItem",
+                    "text": "/g",
+                    "height": dp(56),
+                    "on_release": lambda x="/g": self.set_unit_type(x),
+                },
+                {
+                    "viewclass": "OneLineListItem",
+                    "text": "/Pc",
+                    "height": dp(56),
+                    "on_release": lambda x="/Pc": self.set_unit_type(x),
+                },
+                {
+                    "viewclass": "OneLineListItem",
+                    "text": "/ml",
+                    "height": dp(56),
+                    "on_release": lambda x="ml": self.set_unit_type(x),
+                },
+                {
+                    "viewclass": "OneLineListItem",
+                    "text": "/l",
+                    "height": dp(56),
+                    "on_release": lambda x="/l": self.set_unit_type(x),
+                },
+            ]
 
-        self.unit_type_menu = MDDropdownMenu(
-            caller=sm.get_screen('addproducts').ids.unit_type_drop_down,
-            items=unit_type_drop_down_items,
-            position="center",
-            width_mult=4,
-        
-        )
-        self.unit_type_menu.bind()
+            self.unit_type_menu = MDDropdownMenu(
+                caller=sm.get_screen('addproducts').ids.unit_type_drop_down,
+                items=unit_type_drop_down_items,
+                position="center",
+                width_mult=4,
+            
+            )
+            self.unit_type_menu.bind()
+        except Exception as e:
+            print(e)
 
         if ( platform == 'android' ):
             from android.permissions import request_permissions, Permission
