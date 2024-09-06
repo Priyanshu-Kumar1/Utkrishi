@@ -209,6 +209,7 @@ user = User()
 
 class Utkrishi(MDApp):
     def build(self):
+        Builder.load_file("Utkrishi.kv")
         self.loggedin = False
         sm.add_widget(MainScreen(name = 'main'))
         sm.add_widget(LoginScreen(name = 'login'))
