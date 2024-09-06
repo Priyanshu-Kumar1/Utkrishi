@@ -55,9 +55,12 @@ class MainScreen(MDScreen):
                 i.pos_hint= {'x': 1}
 
     def on_enter(self, *args):
-        product_layout = sm.get_screen('main').ids.main_product_layout
-        self.add_products(product_layout, "")
-
+        try:
+            product_layout = sm.get_screen('main').ids.main_product_layout
+            self.add_products(product_layout, "")
+        except Exception as e:
+            print(e)
+            
     def add_products(self, Layout, product_card):
         self.Layout = Layout
         self.product_card = product_card
@@ -313,8 +316,6 @@ class Utkrishi(MDApp):
         if ( platform == 'android' ):
             from android.permissions import request_permissions, Permission
             from android.storage import app_storage_path, primary_external_storage_path
-            gps.configure(on_location=self.gps_on_location)
-            gps.start()
 
             request_permissions([
                 Permission.CAMERA,
@@ -323,6 +324,9 @@ class Utkrishi(MDApp):
                 Permission.ACCESS_FINE_LOCATION,
                 Permission.ACCESS_COARSE_LOCATION,
             ])
+            
+            gps.configure(on_location=self.gps_on_location)
+            gps.start()
         else:
             print("Location is not available for ", platform, " system.")
         
