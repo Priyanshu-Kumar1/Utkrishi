@@ -110,7 +110,7 @@ jobs:
       - name: Build with Buildozer
         id: buildozer
         run: |
-          yes | mkdir -p logs && buildozer -v android debug > logs/buildozer_log.txt 2>&1 &
+           mkdir -p logs && yes | buildozer -v android debug > logs/buildozer_log_cloud.txt 2>&1 && echo "Building done!" || echo "Build failed!"
 
       # Upload artifacts
       - name: Upload log
