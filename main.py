@@ -144,8 +144,8 @@ class MainScreen(MDScreen):
                                 )
                             product_card = Card(
                                 size_hint= [.4, None],
-                                size= [0, 200],
-                                elevation= 2,
+                                size= [0, 500],
+                                elevation= 1,
                                 md_bg_color= [1,1,1,1],
                                 radius= 10,
                             )
@@ -215,7 +215,6 @@ class Utkrishi(MDApp):
         sm.add_widget(LoginScreen(name = 'login'))
         sm.add_widget(AddProductsScreen(name = 'addproducts'))
         sm.add_widget(FormScreen(name = 'form'))
-        '''
         try:
             app.item_type = ""
             login_menu_items = [
@@ -334,7 +333,7 @@ class Utkrishi(MDApp):
             gps.start()
         else:
             print("Location is not available for ", platform, " system.")
-        '''
+        
         return sm
     
     def gps_on_location(self, **kwargs):
