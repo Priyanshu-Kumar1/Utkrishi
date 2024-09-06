@@ -1,7 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
-
-
 import cloudinary
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
@@ -11,7 +7,12 @@ import json
 
 # Set configuration parameter: return "https" URLs by setting secure=True  
 # ==============================
-config = cloudinary.config(secure=True)
+config = cloudinary.config(
+    cloud_name = "dmpwndgvu", 
+    api_key = "854775738857116", 
+    api_secret = "BryiOkEv0s5DR7dP8hVQIsG_u3U",
+    secure=True
+    )
 
 def uploadImage(file, path):
 
