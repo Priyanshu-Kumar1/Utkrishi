@@ -214,6 +214,7 @@ class Utkrishi(MDApp):
         sm.add_widget(LoginScreen(name = 'login'))
         sm.add_widget(AddProductsScreen(name = 'addproducts'))
         sm.add_widget(FormScreen(name = 'form'))
+        Builder.load_file("Utkrishi.kv")
         app.item_type = ""
         login_menu_items = [
             {
