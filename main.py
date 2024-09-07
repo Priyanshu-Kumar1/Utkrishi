@@ -13,9 +13,11 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.fitimage import FitImage
+from kivymd.utils.set_bars_colors import set_bars_colors
 from kivy.uix.image import AsyncImage
 from kivy.clock import Clock
 from kivy.utils import platform
+from kivy.metrics import dp
 from plyer import filechooser, gps
 
 from login import sign_up
@@ -53,6 +55,8 @@ class MainScreen(MDScreen):
         for i in self.ids.main_layout.children:
             if(i != layout):
                 i.pos_hint= {'x': 1}
+            else:
+                i.pos_hint= {'x': 0}
 
     def on_enter(self, *args):
         try:
@@ -122,8 +126,8 @@ class MainScreen(MDScreen):
         product_layout = sm.get_screen('main').ids.main_product_layout
         product_row_container = MDBoxLayout(
                                 size_hint=[.9, None],
-                                size= [0, 200],
-                                spacing= 20,
+                                size= [0, "200dp"],
+                                spacing= "20dp",
                                 pos_hint= {'center_x': .5},
                             )
 
@@ -138,16 +142,15 @@ class MainScreen(MDScreen):
                                 print(len(product_row_container.children))
                                 product_row_container = MDBoxLayout(
                                     size_hint=[.9, None],
-                                    size= [0, 200],
-                                    spacing= 20,
+                                    size= [0, "200dp"],
+                                    spacing= "20dp",
                                     pos_hint= {'center_x': .5},
                                 )
                             product_card = Card(
-                                size_hint= [.4, None],
-                                size= [0, 500],
+                                size_hint= [.4, 1],
                                 elevation= 1,
                                 md_bg_color= [1,1,1,1],
-                                radius= 10,
+                                radius= "10dp",
                             )
                             product_img = AsyncImage(
                                 source= product_details["url"],
@@ -174,6 +177,9 @@ class MainScreen(MDScreen):
                             except:
                                 pass
                             self.ids[product_details["id"]] = product_card
+
+    def search_bar_up_anim(self, **kwargs):
+        print(kwargs)
                 
         
 class LoginScreen(MDScreen):
@@ -320,6 +326,7 @@ class Utkrishi(MDApp):
         if ( platform == 'android' ):
             from android.permissions import request_permissions, Permission
             from android.storage import app_storage_path, primary_external_storage_path
+            set_bars_colors(C('#202124'))
 
             request_permissions([
                 Permission.CAMERA,
@@ -337,8 +344,7 @@ class Utkrishi(MDApp):
         return sm
     
     def gps_on_location(self, **kwargs):
-        kwargs['lat'] = 10
-        kwargs['lon'] = 10
+        sm.get_screen('login').ids.test_lb.text = kwargs
         print("python_location: ", kwargs)
         
     def set_login_item(self, text_item):

@@ -34,10 +34,12 @@
             md_bg_color: C('#4CC955')
             elevation: 1
             radius: 0, 0, "15dp", "15dp"
-            size_hint: 1, .07
-            pos_hint: {"center_x": .5, "y": .9}
+            size_hint: 1, None
+            size: 0, "60dp"
+            pos_hint: {"center_x": .5, "top": 1}
 
             MDLabel:
+                id: test_lb
                 text: "Home"
                 font_size: "25dp"
                 bold: True
@@ -64,6 +66,7 @@
                 size_hint: 1, .78
                 do_scroll_x: False
                 pos_hint: {"x": 0, "center_y": .5}
+                on_scroll_move: root.search_bar_up_anim()
 
                 MDBoxLayout:
                     id: main_product_layout
@@ -223,32 +226,42 @@
                         pos_hint: {'x': 1, 'top': 1}
 
 
-                        
-            BoxLayout:
-                id: cart_layout
-            
-            BoxLayout:
+            MDBoxLayout:
                 id: account_layout
-
-            BoxLayout:
-                id: grocery_layout
+                md_bg_color: 0,.3,0,1
+                size_hint: 1, 1
+                pos_hint: {"x": 0, "center_y": .5}
+            
+            MDBoxLayout:
+                id: cart_layout
+                md_bg_color: 0,0,0.3,1      
+                size_hint: 1, 1
+                pos_hint: {"x": 1, "center_y": .5}
             
             MDBoxLayout:
                 id: shopping_layout
-                md_bg_color: C('#4CC955')
-
+                md_bg_color: 0,0,0.3,1
+                size_hint: 1, 1
+                pos_hint: {"x": -1, "center_y": .5}
+            
+            MDBoxLayout:
+                id: my_order_layout
+                md_bg_color: 0.3,0,0,1  
+                size_hint: 1, 1
+                pos_hint: {"x": -2, "center_y": .5}
         
         Card:
             md_bg_color: C('#ffffff')
             elevation: 1
             radius: "15dp", "15dp", 0, 0
-            size_hint: 1, .1
+            size_hint: 1, None
+            size: 0, "60dp"
 
             NavButton:
                 id: sack_btn
-                icon: "cash-multiple"
-                icon_color: C('#8e6f5a') if grocery_layout.x != 0 else C('#4CC955')
-                icon_size: "22dp" if grocery_layout.x != 0 else "32dp"
+                icon: "package"
+                icon_color: C('#8e6f5a') if my_order_layout.x != 0 else C('#4CC955')
+                icon_size: "22dp" if my_order_layout.x != 0 else "32dp"
                 pos_hint: {"center_x": .1, "center_y": .5}
 
                 ButtonLayout:
@@ -256,11 +269,11 @@
                     on_press: 
                         sack_btn.elevation = 1
                         sack_btn.icon_size = "18dp"
-                        root.show_layout(grocery_layout)
+                        root.show_layout(my_order_layout)
 
                     on_release: 
                         sack_btn.elevation = 2
-                        sack_btn.icon_size = "22dp" if grocery_layout.x != 0 else "32dp"
+                        sack_btn.icon_size = "22dp" if my_order_layout.x != 0 else "32dp"
 
 
             NavButton:
