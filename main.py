@@ -18,6 +18,7 @@ from kivy.uix.image import AsyncImage
 from kivy.clock import Clock
 from kivy.utils import platform
 from kivy.metrics import dp
+from kivy.utils import get_color_from_hex as C
 from plyer import filechooser, gps
 
 from login import sign_up
@@ -41,6 +42,9 @@ class User():
         self.username = username
         self.email = email
         self.type = type
+
+class LanguageSelectionScreen(MDScreen):
+    pass
 
 class MainScreen(MDScreen):
     def change_screen(self):
@@ -217,6 +221,7 @@ class Utkrishi(MDApp):
     def build(self):
         Builder.load_file("Utkrishi.kv")
         self.loggedin = False
+        sm.add_widget(LanguageSelectionScreen(name = 'LanguageSelectionScreen'))
         sm.add_widget(MainScreen(name = 'main'))
         sm.add_widget(LoginScreen(name = 'login'))
         sm.add_widget(AddProductsScreen(name = 'addproducts'))
