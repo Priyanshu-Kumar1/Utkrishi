@@ -1,7 +1,7 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import MDScreen
-from kivymd.uix.behaviors import CommonElevationBehavior, CircularElevationBehavior, RectangularRippleBehavior, CircularRippleBehavior
+from kivymd.uix.behaviors import CommonElevationBehavior
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivymd.uix.menu import MDDropdownMenu
@@ -9,17 +9,19 @@ from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import StringProperty
 from kivymd.uix.list import OneLineIconListItem
-from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.fitimage import FitImage
 from kivymd.utils.set_bars_colors import set_bars_colors
 from kivy.uix.image import AsyncImage
-from kivy.clock import Clock
+from kivy.uix.screenmanager import NoTransition
+from kivy.uix.widget import Widget
 from kivy.utils import platform
 from kivy.metrics import dp
 from kivy.utils import get_color_from_hex as C
 from plyer import filechooser, gps
+from kivy.clock import mainthread
+from kivy.animation import Animation
+
 
 from login import sign_up
 import database as db
@@ -43,6 +45,10 @@ class User():
         self.email = email
         self.type = type
 
+class LanguageSelectionScreen(MDScreen):
+    def change_screen(self):
+        self.manager.current = "main"
+
 class MainScreen(MDScreen):
     def change_screen(self):
         if user.type == None:
@@ -61,65 +67,12 @@ class MainScreen(MDScreen):
 
     def on_enter(self, *args):
         try:
-            product_layout = sm.get_screen('main').ids.main_product_layout
-            self.add_products(product_layout, "")
+            self.add_products()
         except Exception as e:
             print(e)
 
-    def add_products(self, Layout, product_card):
-        self.Layout = Layout
-        self.product_card = product_card
-        
-        
+    def add_products(self):
         products= db.get_data('/products/')
-        
-        def add(*args):
-            global MainApp
-                
-            pair_list = self.make_pair(productlist)
-                
-            for i in pair_list:
-                    
-                layout= MDBoxLayout(md_bg_color= [0,0,0,1],
-                        spacing= "10dp",
-                        padding= "10dp",
-                        adaptive_height= True)
-                    
-                for j in i:
-                    card= ProductCard(size_hint= [.2, None],
-                            size= self.product_card.size,
-                                md_bg_color= [1,1,1,1],
-                                elevation= 2,
-                                radius= [10])
-                    img= products[j]['url']
-                    img = img.replace('https://storage.googleapis.com/icon-7623d.appspot.com/products/', '')
-                    img = f"https://firebasestorage.googleapis.com/v0/b/icon-7623d.appspot.com/o/products%2F{img}?alt=media&token=18409308-326b-4ac7-b866-52105f2cef3f"
-                    price = products[j]['price']
-                    image= AsyncImage(source= img,
-                                    size_hint= [.75, .75],
-                                    pos_hint= {'center_x': .5, 'center_y': .55})
-                    label= MDLabel(text= f'Rs. {price}', pos_hint= {'center_x': .53, 'center_y': .12}, bold= True,)
-                    btn_layout= ButtonLayout(size_hint= [1, 1], pos_hint= {"center_x": .5, "center_y": .5})
-                    btn_fun = partial(MainApp().change_screen, "Edit Product", "ChangeScreen", {"title": j, "price": products[j]['price'], "img_url": img}) if user.teacher else partial(self.buy_request, j)
-                    btn_layout.bind(on_release= btn_fun)
-                    card.add_widget(image)
-                    card.add_widget(label)
-                    card.add_widget(btn_layout)
-                    layout.add_widget(card)
-                        
-                    
-                        
-                self.Layout.add_widget(layout)
-                self.dialog.dismiss()
-        
-        if (products != None and self.Layout.children == []):
-            productlist = []
-            for k, v in products.items():
-                productlist += [k]
-                
-            '''self.dialog= MDDialog(text= "Loading...",)
-            self.dialog.open()
-            Clock.schedule_once(add, 0.5) '''
         
         self.add(products)
 
@@ -178,9 +131,24 @@ class MainScreen(MDScreen):
                             except:
                                 pass
                             self.ids[product_details["id"]] = product_card
+            product_layout.add_widget(Widget(
+                size_hint_y= None,
+                height= "60dp"
+            ))
 
-    def search_bar_up_anim(self, **kwargs):
-        print(kwargs)
+    def scroll_touch_down(self, touch_point_x, touch_point_y, search_bar, nav_bar):
+        if not (search_bar.collide_point(touch_point_x, touch_point_y) or nav_bar.collide_point(touch_point_x, touch_point_y)):
+            self.touched_down_x = touch_point_x
+            self.touched_down_y = touch_point_y
+        
+    def scroll_touch_up(self, touch_point_x, touch_point_y, navbar):
+        if self.touched_down_y < touch_point_y:
+            self.nabar_up_anim = Animation(y=navbar.parent.height, duration=.1)
+            self.nabar_up_anim.start(navbar)
+
+        if self.touched_down_y > touch_point_y:
+            self.nabar_down_anim = Animation(y=navbar.parent.height-navbar.height, duration=.1)
+            self.nabar_down_anim.start(navbar)
                 
         
 class LoginScreen(MDScreen):
@@ -211,13 +179,15 @@ class AddProductsScreen(MDScreen):
 class FormScreen(MDScreen):
     pass
 
-sm = ScreenManager()
+sm = ScreenManager(transition=NoTransition())
 user = User()
 
 class Utkrishi(MDApp):
     def build(self):
         Builder.load_file("Utkrishi.kv")
         self.loggedin = False
+        self.language = "English"
+        sm.add_widget(LanguageSelectionScreen(name = 'LanguageSelectionScreen'))
         sm.add_widget(MainScreen(name = 'main'))
         sm.add_widget(LoginScreen(name = 'login'))
         sm.add_widget(AddProductsScreen(name = 'addproducts'))
@@ -327,6 +297,7 @@ class Utkrishi(MDApp):
         if ( platform == 'android' ):
             from android.permissions import request_permissions, Permission
             from android.storage import app_storage_path, primary_external_storage_path
+            #set_bars_colors(C('#202124'), C('#202124'))
 
             request_permissions([
                 Permission.CAMERA,
@@ -336,16 +307,22 @@ class Utkrishi(MDApp):
                 Permission.ACCESS_COARSE_LOCATION,
             ])
             
-            gps.configure(on_location=self.gps_on_location)
+            gps.configure(on_location=self.on_location, on_status=self.on_status)
             gps.start()
         else:
             print("Location is not available for ", platform, " system.")
         
         return sm
     
-    def gps_on_location(self, **kwargs):
-        sm.get_screen('login').ids.test_lb.text = kwargs
-        print("python_location: ", kwargs)
+    @mainthread
+    def on_location(self, **kwargs):
+        self.gps_location = '\n'.join([
+            '{}={}'.format(k, v) for k, v in kwargs.items()])
+        print("Location is available for ", self.gps_location)
+
+    @mainthread
+    def on_status(self, stype, status):
+        self.gps_status = 'type={}\n{}'.format(stype, status)
         
     def set_login_item(self, text_item):
         sm.get_screen('login').ids.drop_item.set_item(text_item)
