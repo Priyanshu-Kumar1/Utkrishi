@@ -1,4 +1,20 @@
 #:import C kivy.utils.get_color_from_hex
+#:import SearchBar components.SearchBar.SearchBar
+
+
+<ButtonLayout>
+    border_color: 0, 0, 0, 0
+    FloatLayout:
+        size_hint: 1, 1
+        pos_hint: {"center_x": .5, "center_y": .5}
+        canvas.before:
+            Color:
+                rgba: root.border_color  # Initial border color (transparent)
+            Line:
+                width: 1.5  # Border width
+                rectangle: self.x, self.y, self.width, self.height
+
+        
 <IconListItem>
 
     IconLeftWidget:
@@ -24,49 +40,225 @@
 
         
 
+<LanguageSelectionScreen>
+    MDFloatLayout:
+        md_bg_color: 1,1,1,1
+        size_hint: 1, 1
+
+        MDLabel:
+            text: "Select Language"
+            font_size: "24dp"
+            bold: True
+            color: C('#4CC955')
+            pos_hint: { "center_y": .9}
+            x: "24dp"
+        
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            size: 0, "100dp"
+            pos_hint: {"center_y": .7}
+
+            Widget:
+                size_hint: 1, 1
+
+            ButtonLayout:
+                id: tamil_lang_btn
+                md_bg_color: C("#d9e9f8")
+                size_hint: None, 1
+                size: "125dp", "100dp"
+                on_press: 
+                    self.border_color = C("#4995dd")
+                    eng_lang_btn.border_color = 0,0,0,0
+                    hindi_lang_btn.border_color = 0,0,0,0
+                    tal_lang_btn.border_color = 0,0,0,0
+                    app.language = "Tamil"
+
+                MDLabel:
+                    text: "Tamil"
+                    font_size: "14dp"
+                    color: C("#4995dd")
+                    adaptive_height: True
+                    pos_hint: {"x": .1, "top": .95}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "அ"
+                    font_name: "assets/fonts/Tamil_font.ttf"
+                    font_script_name: "Taml"
+                    font_size: "24dp"
+                    color: C("#4995dd")
+                    halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "தமிழ் "
+                    font_name: "assets/fonts/Tamil_font.ttf"
+                    font_script_name: "Taml"
+                    font_size: "14dp"
+                    color: C("#4995dd")
+                    adaptive_height: True
+                    halign: "right"
+                    size_hint_x: .8
+                    pos_hint: {"center_x": .5, "y": .05}
+                    padding: "15db"
+
+            Widget:
+                size_hint: 1, 1
+
+            ButtonLayout:
+                id: eng_lang_btn
+                md_bg_color: C("#dbf1db")
+                size_hint: None, None
+                size: "125dp", "100dp"
+                on_press: 
+                    self.border_color = C("#4cb74c")
+                    tamil_lang_btn.border_color = 0,0,0,0
+                    hindi_lang_btn.border_color = 0,0,0,0
+                    tal_lang_btn.border_color = 0,0,0,0
+                    app.language = "English"
+
+                MDLabel:
+                    text: "English"
+                    font_size: "14dp"
+                    color: C("#4cb74c")
+                    adaptive_height: True
+                    pos_hint: {"x": .1, "top": .95}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "A"
+                    font_size: "24dp"
+                    color: C("#4cb74c")
+                    halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+            Widget:
+                size_hint: 1, 1
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            size: 0, "100dp"
+            pos_hint: {"center_y": .5}
+
+            Widget:
+                size_hint: 1, 1
+
+            ButtonLayout:
+                id: hindi_lang_btn
+                md_bg_color: C("#fdf2d2")
+                size_hint: None, None
+                size: "125dp", "100dp"
+                pos_hint: {"x": .1, "center_y": .3}
+                on_press: 
+                    self.border_color = C("#f7d569")
+                    eng_lang_btn.border_color = 0,0,0,0
+                    tamil_lang_btn.border_color = 0,0,0,0
+                    tal_lang_btn.border_color = 0,0,0,0
+                    app.language = "Hindi"
+                
+                MDLabel:
+                    text: "Hindi"
+                    font_size: "14dp"
+                    color: C("#f7d569")
+                    adaptive_height: True
+                    pos_hint: {"x": .1, "top": .95}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "अ"
+                    font_name: "assets/fonts/Hindi_font.ttf"
+                    font_size: "24dp"
+                    color: C("#f7d569")
+                    halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    padding: "15db"
+                
+                MDLabel:
+                    text: "हिन्दी"
+                    font_name: "assets/fonts/Hindi_font.ttf"
+                    font_script_name: "Deva"
+                    font_size: "14dp"
+                    color: C("#f7d569")
+                    adaptive_height: True
+                    halign: "right"
+                    size_hint_x: .8
+                    pos_hint: {"center_x": .5, "y": .05}
+                    padding: "15db"
+
+            Widget:
+                size_hint: 1, 1
+            
+            ButtonLayout:
+                id: tal_lang_btn
+                md_bg_color: C("#bae5eb")
+                size_hint: None, None
+                size: "125dp", "100dp"
+                pos_hint: {"x": .1, "center_y": .3}
+                on_press: 
+                    self.border_color = C("#38b6c7")
+                    eng_lang_btn.border_color = 0,0,0,0
+                    tamil_lang_btn.border_color = 0,0,0,0
+                    hindi_lang_btn.border_color = 0,0,0,0
+                    app.language = "Telugu"
+                
+                MDLabel:
+                    text: "Telugu"
+                    font_size: "14dp"
+                    color: C("#38b6c7")
+                    adaptive_height: True
+                    pos_hint: {"x": .1, "top": .95}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "అ"
+                    font_name: "assets/fonts/Telugu_font.ttf"
+                    font_size: "24dp"
+                    color: C("#38b6c7")
+                    halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    padding: "15db"
+                
+                MDLabel:
+                    text: "తెలుగు   "
+                    font_name: "assets/fonts/Telugu_font.ttf"
+                    font_script_name: "Telu"
+                    font_size: "14dp"
+                    color: C("#38b6c7")
+                    adaptive_height: True
+                    halign: "right"
+                    size_hint_x: .8
+                    pos_hint: {"center_x": .5, "y": .05}
+
+            Widget:
+                size_hint: 1, 1
+
+        MDRaisedButton:
+            text: "Next"
+            md_bg_color: C('#4CC955')
+            size_hint_x: .9
+            pos_hint: {"center_x": .5, "center_y": .1}
+            on_release: root.change_screen()
+
+
 
 <MainScreen>
     MDFloatLayout:
-        md_bg_color: C('#FFF0E3')
+        md_bg_color: C("#dbf1db")
         size_hint: 1, 1
-
-        Card:
-            md_bg_color: C('#4CC955')
-            elevation: 1
-            radius: 0, 0, "15dp", "15dp"
-            size_hint: 1, None
-            size: 0, "60dp"
-            pos_hint: {"center_x": .5, "top": 1}
-
-            MDLabel:
-                id: test_lb
-                text: "Home"
-                font_size: "25dp"
-                bold: True
-                color: C("#ffffff")
-                pos_hint: {"x": .05, "y": .05}
-
-            MDFillRoundFlatIconButton:
-                id: login_btn
-                icon: "login" 
-                text: "Login" if not app.loggedin else "Cart"
-                pos_hint: {"center_x": .85, "center_y": .5}
-                md_bg_color: 1,1,1,1
-                theme_text_color: "Custom"
-                theme_icon_color: "Custom"
-                icon_color: C('#202124')
-                text_color: C('#202124')
-                size_hint: .2, .2
-                on_press: root.change_screen()
-        
+         
         MDFloatLayout:
             id: main_layout
-            ScrollView:
+
+            MDScrollView:
                 id: home_layout
-                size_hint: 1, .78
+                size_hint: 1, 1
                 do_scroll_x: False
                 pos_hint: {"x": 0, "center_y": .5}
-                on_scroll_move: root.search_bar_up_anim()
+                on_touch_down: if self.collide_point(*args[1].pos): root.scroll_touch_down(*args[1].pos, search_bar_bg, navbar)
+                on_touch_up: root.scroll_touch_up(*args[1].pos, navbar)
 
                 MDBoxLayout:
                     id: main_product_layout
@@ -74,6 +266,11 @@
                     spacing: "10dp"
                     pos_hint: {"x": 0, "center_y": .5}
                     adaptive_height: True
+
+                    Widget:
+                        id: nav_search_bar_height_reference
+                        size_hint: 1, None
+                        size: 0, navbar.height+search_bar.height+(navbar.height/2)
 
                     Card:
                         md_bg_color: C('#ffffff')
@@ -226,11 +423,7 @@
                         pos_hint: {'x': 1, 'top': 1}
 
 
-            MDBoxLayout:
-                id: account_layout
-                md_bg_color: 0,.3,0,1
-                size_hint: 1, 1
-                pos_hint: {"x": 0, "center_y": .5}
+            
             
             MDBoxLayout:
                 id: cart_layout
@@ -249,6 +442,43 @@
                 md_bg_color: 0.3,0,0,1  
                 size_hint: 1, 1
                 pos_hint: {"x": -2, "center_y": .5}
+
+        MDFloatLayout:
+            id: navbar
+            md_bg_color: C("#dbf1db")
+            size_hint: 1, None
+            size: 0, "60dp"
+            pos_hint: {"center_x": .5}
+            y: self.parent.height-self.height
+
+            MDLabel:
+                id: test_lb
+                text: "Utkrishi"
+                font_size: "18dp"
+                bold: True
+                color: 0,0,0,1
+                pos_hint: {"x": .05, "y": .05}
+
+            MDFillRoundFlatIconButton:
+                id: login_btn
+                icon: "login" 
+                text: "Login" if not app.loggedin else "Cart"
+                pos_hint: {"center_x": .85, "center_y": .5}
+                md_bg_color: 1,1,1,1
+                theme_text_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: C('#202124')
+                text_color: C('#202124')
+                size_hint: .2, .2
+                on_press: root.change_screen()
+        
+        MDFloatLayout:
+            id: search_bar_bg
+            size_hint: 1, None
+            md_bg_color: C("#dbf1db")
+            height: search_bar.height+(search_bar.height/2)
+            pos_hint: {"center_x": .5}
+            y: navbar.y-self.height
         
         Card:
             md_bg_color: C('#ffffff')
@@ -257,98 +487,105 @@
             size_hint: 1, None
             size: 0, "60dp"
 
-            NavButton:
-                id: sack_btn
-                icon: "package"
-                icon_color: C('#8e6f5a') if my_order_layout.x != 0 else C('#4CC955')
-                icon_size: "22dp" if my_order_layout.x != 0 else "32dp"
-                pos_hint: {"center_x": .1, "center_y": .5}
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, 1
+                Widget:
+                    size_hint: 1, 1
+                NavButton:
+                    id: sack_btn
+                    icon: "package"
+                    icon_color: C('#8e6f5a') if my_order_layout.x != 0 else C('#4CC955')
+                    icon_size: "22dp" if my_order_layout.x != 0 else "32dp"
+                    pos_hint: {"center_x": .1, "center_y": .5}
 
-                ButtonLayout:
+                    ButtonLayout:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_press: 
+                            sack_btn.elevation = 1
+                            sack_btn.icon_size = "18dp"
+                            root.show_layout(my_order_layout)
+
+                        on_release: 
+                            sack_btn.elevation = 2
+                            sack_btn.icon_size = "22dp" if my_order_layout.x != 0 else "32dp"
+
+                Widget:
+                    size_hint: 1, 1
+                
+                NavButton:
+                    id: fruits_btn
+                    icon: "shopping"
+                    icon_color: C('#702cf6') if shopping_layout.x != 0 else C('#4CC955')
+                    icon_size: "22dp" if shopping_layout.x != 0 else "32dp"
+                    pos_hint: {"center_x": .3, "center_y": .5}
+
+                    ButtonLayout:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_press:
+                            fruits_btn.icon_size = "18dp"
+                            root.show_layout(shopping_layout)
+
+                        on_release: 
+                            fruits_btn.elevation = 2
+                            fruits_btn.icon_size = "22dp" if shopping_layout.x != 0 else "32dp"
+                
+                Widget:
+                    size_hint: 1, 1
+                
+                NavButton:
+                    id: home_btn
+                    icon: "home"
+                    icon_color: C('#202124') if home_layout.x != 0 else C('#4CC955')
+                    icon_size: "22dp" if home_layout.x != 0 else "32dp"
                     pos_hint: {"center_x": .5, "center_y": .5}
-                    on_press: 
-                        sack_btn.elevation = 1
-                        sack_btn.icon_size = "18dp"
-                        root.show_layout(my_order_layout)
 
-                    on_release: 
-                        sack_btn.elevation = 2
-                        sack_btn.icon_size = "22dp" if my_order_layout.x != 0 else "32dp"
+                    ButtonLayout:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_press: 
+                            home_btn.elevation = 1
+                            home_btn.icon_size = "18dp"
+                            root.show_layout(home_layout)
 
+                        on_release: 
+                            home_btn.elevation = 2
+                            home_btn.icon_size = "22dp" if home_layout.x != 0 else "32dp"
+                
+                Widget:
+                    size_hint: 1, 1
+                
+                NavButton:
+                    id: cart_btn
+                    icon: "cart"
+                    icon_color: C("#949399") if cart_layout.x != 0 else C('#4CC955')
+                    icon_size: "22dp" if cart_layout.x != 0 else "32dp"
+                    pos_hint: {"center_x": .7, "center_y": .5}
 
-            NavButton:
-                id: fruits_btn
-                icon: "shopping"
-                icon_color: C('#702cf6') if shopping_layout.x != 0 else C('#4CC955')
-                icon_size: "22dp" if shopping_layout.x != 0 else "32dp"
-                pos_hint: {"center_x": .3, "center_y": .5}
+                    ButtonLayout:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_press: 
+                            cart_btn.elevation = 1
+                            cart_btn.icon_size = "18dp"
+                            root.show_layout(cart_layout)
 
-                ButtonLayout:
-                    pos_hint: {"center_x": .5, "center_y": .5}
-                    on_press:
-                        fruits_btn.icon_size = "18dp"
-                        root.show_layout(shopping_layout)
+                        on_release: 
+                            cart_btn.elevation = 2
+                            cart_btn.icon_size = "22dp" if cart_layout.x != 0 else "32dp"
 
-                    on_release: 
-                        fruits_btn.elevation = 2
-                        fruits_btn.icon_size = "22dp" if shopping_layout.x != 0 else "32dp"
-            
-            NavButton:
-                id: home_btn
-                icon: "home"
-                icon_color: C('#202124') if home_layout.x != 0 else C('#4CC955')
-                icon_size: "22dp" if home_layout.x != 0 else "32dp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-
-                ButtonLayout:
-                    pos_hint: {"center_x": .5, "center_y": .5}
-                    on_press: 
-                        home_btn.elevation = 1
-                        home_btn.icon_size = "18dp"
-                        root.show_layout(home_layout)
-
-                    on_release: 
-                        home_btn.elevation = 2
-                        home_btn.icon_size = "22dp" if home_layout.x != 0 else "32dp"
-            
-            NavButton:
-                id: cart_btn
-                icon: "cart"
-                icon_color: C("#949399") if cart_layout.x != 0 else C('#4CC955')
-                icon_size: "22dp" if cart_layout.x != 0 else "32dp"
-                pos_hint: {"center_x": .7, "center_y": .5}
-
-                ButtonLayout:
-                    pos_hint: {"center_x": .5, "center_y": .5}
-                    on_press: 
-                        cart_btn.elevation = 1
-                        cart_btn.icon_size = "18dp"
-                        root.show_layout(cart_layout)
-
-                    on_release: 
-                        cart_btn.elevation = 2
-                        cart_btn.icon_size = "22dp" if cart_layout.x != 0 else "32dp"
-
-            NavButton:
-                id: account_btn
-                icon: "account"
-                icon_color: C("#d4c5b6") if account_layout.x != 0 else C('#4CC955')
-                icon_size: "22dp" if account_layout.x != 0 else "32dp"
-                pos_hint: {"center_x": .9, "center_y": .5}
-
-                ButtonLayout:
-                    pos_hint: {"center_x": .5, "center_y": .5}
-                    on_press: 
-                        account_btn.elevation = 1
-                        account_btn.icon_size = "18dp"
-                        root.show_layout(account_layout)
-
-                    on_release: 
-                        account_btn.elevation = 2
-                        account_btn.icon_size = "22dp" if account_layout.x != 0 else "32dp"
-
-
-
+                Widget:
+                    size_hint: 1, 1
+        SearchBar:
+            id: search_bar
+            default_search_size_hint: .9, None
+            default_search_size: 0, "40dp"
+            open_search_size_hint: 1, 1
+            default_radius: "10dp"
+            border_color: C("#4cb74c")
+            left_icon: "magnify"
+            search_bar_color: "white"
+            search_view_color: "white"
+            pos_hint: {'center_x': .5}
+            center_y: search_bar_bg.center_y
             
 <LoginScreen>
     MDFloatLayout:
@@ -424,7 +661,7 @@
 <AddProductsScreen>
     MDFloatLayout:
         size_hint: 1, 1
-        md_bg_color:  C('#FFF0E3')
+        md_bg_color:  1,1,1,1
 
         MDIconButton:
             icon: "arrow-left"
