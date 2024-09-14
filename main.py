@@ -297,7 +297,7 @@ class Utkrishi(MDApp):
         if ( platform == 'android' ):
             from android.permissions import request_permissions, Permission
             from android.storage import app_storage_path, primary_external_storage_path
-            #set_bars_colors(C('#202124'), C('#202124'))
+            set_bars_colors(C('#dbf1db'), C('#dbf1db'))
 
             request_permissions([
                 Permission.CAMERA,
