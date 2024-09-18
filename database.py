@@ -33,6 +33,13 @@ def append_data(data, path= "/"):
 
     store(data, path)
 
+
+def push(data, path= "/"):
+
+    ref= db.reference(path)
+
+    ref.push().set(data)
+
     
 
 

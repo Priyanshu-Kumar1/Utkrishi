@@ -1,6 +1,7 @@
 #:import C kivy.utils.get_color_from_hex
 #:import SearchBar components.SearchBar.SearchBar
-
+#:import MapView kivy.garden.mapview.MapView
+#:import MapSource kivy_garden.mapview.MapSource
 
 <ButtonLayout>
     border_color: 0, 0, 0, 0
@@ -28,7 +29,6 @@
     icon_size: "22dp"
     icon_color: C('#4CC955')
     pos_hint: {"center_x": .5, "center_y": .45}
-
                 
     MDIcon:
         icon: root.icon
@@ -38,7 +38,228 @@
         halign: "center"
         pos_hint: {"center_x": .5, "center_y": .5}
 
+<ProductCard>
+    md_bg_color: c("#dbf1db")
+    md_bg_color: C("#dbf1db")
+    radius: "10dp"
+    image: ""
+    product_name: ""
+    product_price: ""
+    product_selling_unit: ""
+    distance: "20 km"
+    duration: "10 min"
+
+    AsyncImage:
+        id: product_img
+        source: root.image
+        size_hint: None, None
+        size: "100dp", "130dp"
+        radius: "10dp"
+        y: root.y + root.height - self.height - dp(10)
+        x: root.x + dp(10)
+        canvas.before:
+            Color:
+                rgba: 1,1,1,1
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: dp(10), dp(10), dp(10), dp(10)
+
+    MDFloatLayout:
+        id: product_info_layout
+        size_hint: None, None
+        size: self.parent.width - dp(130), "130dp"
+        md_bg_color: 1,1,1,.5
+        radius: "10dp"
+        y: root.y + root.height - self.height - dp(10)
+        x: product_img.x + product_img.width + dp(10)
+
+
+        MDLabel:
+            text: root.product_name
+            halign: "left"
+            pos_hint: {'x': .05, 'center_y': .8}
         
+        MDLabel:
+            text: "[b]₹"+root.product_price+"[/b][size=10]"+root.product_selling_unit+"[/size]"
+            halign: "left"
+            markup: True
+            pos_hint: {'x': .05, 'center_y': .6}
+
+
+    MDBoxLayout:
+        size_hint: None, None
+        size: "120dp", "30dp"
+        md_bg_color: C("#dbf1db")
+        radius: "10dp", 0, 0, 0
+        pos_hint: {'right': 1}
+        y: product_info_layout.y
+        padding: dp(5), dp(5), dp(5), dp(5)
+
+        MDFloatLayout:
+            size_hint: None, None
+            adaptive_height: True
+            adaptive_width: True
+            pos_hint: {'x': 0, 'center_y': .5}
+
+            MDIcon:
+                id: distance_icon
+                icon: "road-variant"
+                font_size: "12dp"
+                color: C("#4CC955")
+                size_hint: None, None
+                width: dp(10)
+                pos_hint: {"x": 0, "center_y": .5}
+
+            MDLabel:
+                id: distance_lb
+                text: root.distance
+                font_size: "12dp"
+                size_hint: None, None
+                width: dp(40)
+                color: C("#4CC955")
+                pos_hint: {"center_y": .5}
+                x: distance_icon.x + distance_icon.width + dp(5)
+            
+            MDIcon:
+                id: duration_icon
+                icon: "clock"
+                font_size: "12dp"
+                color: C("#4CC955")
+                size_hint: None, None
+                width: dp(10)
+                pos_hint: {"center_y": .5}
+                x: distance_lb.x + distance_lb.width + dp(1)
+
+            MDLabel:
+                text: root.duration
+                font_size: "12dp"
+                color: C("#4CC955")
+                size_hint: None, None
+                width: dp(40)
+                pos_hint: {"center_y": .5}
+                x: duration_icon.x + duration_icon.width + dp(5)
+
+<SectionProgressBar>
+    current_section: first_section
+
+    MDFloatLayout:
+        id: first_section
+        md_bg_color: root.section_color(first_section)
+        size_hint: None, None
+        size: "25dp", "25dp"
+        radius: "15dp"
+        pos_hint: {"x": 0, "center_y": .5}
+        canvas.before:
+            Color:
+                rgba: C("#4CC955")
+            Line:
+                width: 1.5  # Border width
+                rounded_rectangle: [self.x, self.y, self.width, self.height] + self.radius
+
+        MDIcon:
+            icon: "numeric-1"
+            font_size: "20dp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+    MDLabel:
+        text: "Summery"
+        font_size: "15dp"
+        x: first_section.x-(first_section.width/2)
+        y: root.y-(root.height/2)
+
+    MDFloatLayout:
+        size_hint: None, None
+        height: "2dp"
+        width: (self.parent.width/2) - dp(47.5)
+        md_bg_color: C("#4CC955")
+        pos_hint: {"center_y": .5}
+        x: root.x+dp(30)
+
+    MDFloatLayout:
+        id: second_section
+        md_bg_color: C("#dbf1db")
+        size_hint: None, None
+        size: "25dp", "25dp"
+        radius: "15dp"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        canvas.before:
+            Color:
+                rgba: C("#4CC955")
+            Line:
+                width: 1.5  # Border width
+                rounded_rectangle: [self.x, self.y, self.width, self.height] + self.radius
+
+        MDIcon:
+            icon: "numeric-2"
+            font_size: "20dp"
+            color: C("#4CC955")
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+    MDLabel:
+        text: "Address"
+        font_size: "15dp"
+        x: second_section.x-(second_section.width/2)
+        y: root.y-(root.height/2)
+        
+    MDFloatLayout:
+        size_hint: None, None
+        height: "2dp"
+        width: (self.parent.width/2) - dp(47.5)
+        md_bg_color: C("#4CC955")
+        pos_hint: {"center_y": .5}
+        x: self.parent.center_x + dp(17.5)
+
+    MDFloatLayout:
+        id: third_section
+        md_bg_color: C("#dbf1db")
+        size_hint: None, None
+        size: "25dp", "25dp"
+        radius: "15dp"
+        pos_hint: {"right": 1, "center_y": .5}
+        canvas.before:
+            Color:
+                rgba: C("#4CC955")
+            Line:
+                width: 1.5  # Border width
+                rounded_rectangle: [self.x, self.y, self.width, self.height] + self.radius
+
+        MDIcon:
+            icon: "numeric-3"
+            font_size: "20dp"
+            color: C("#4CC955")
+            pos_hint: {"center_x": .5, "center_y": .5}
+    
+    MDLabel:
+        text: "Payment"
+        font_size: "15dp"
+        x: third_section.x-(third_section.width/2)
+        y: root.y-(root.height/2)
+
+
+<CirclarProgress>
+    progress_bar_color: 0,0,0,0
+
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: root.angle
+            origin: self.center
+
+    canvas.after:
+        PopMatrix
+
+    MDFloatLayout:
+        size_hint: 1, 1
+        pos_hint: {"center_x": .5, "center_y": .5}
+    
+        canvas.before:
+            Color:
+                rgba: root.progress_bar_color
+            Line:
+                width: 5
+                circle: (self.center_x, self.center_y, min(self.width, self.height)/ 2, 0, 250)
+            
 
 <LanguageSelectionScreen>
     MDFloatLayout:
@@ -246,7 +467,7 @@
 
 <MainScreen>
     MDFloatLayout:
-        md_bg_color: C("#dbf1db")
+        md_bg_color: C("#ffffff")
         size_hint: 1, 1
          
         MDFloatLayout:
@@ -254,11 +475,13 @@
 
             MDScrollView:
                 id: home_layout
-                size_hint: 1, 1
+                size_hint: 1, None
+                height: self.parent.height - (navbar.height + search_bar_bg.height)
                 do_scroll_x: False
-                pos_hint: {"x": 0, "center_y": .5}
-                on_touch_down: if self.collide_point(*args[1].pos): root.scroll_touch_down(*args[1].pos, search_bar_bg, navbar)
-                on_touch_up: root.scroll_touch_up(*args[1].pos, navbar)
+                pos_hint: {"x": 0}
+                y: search_bar_bg.y-self.height
+                on_touch_down: if self.collide_point(*args[1].pos): root.scroll_touch_down(*args[1].pos, search_bar_bg, navbar, horizontal_scroll)
+                on_touch_move: if self.collide_point(*args[1].pos): root.move_test(*args[1].pos, navbar)
 
                 MDBoxLayout:
                     id: main_product_layout
@@ -266,11 +489,6 @@
                     spacing: "10dp"
                     pos_hint: {"x": 0, "center_y": .5}
                     adaptive_height: True
-
-                    Widget:
-                        id: nav_search_bar_height_reference
-                        size_hint: 1, None
-                        size: 0, navbar.height+search_bar.height+(navbar.height/2)
 
                     Card:
                         md_bg_color: C('#ffffff')
@@ -299,6 +517,7 @@
                                 pos_hint: {"center_x": .55, "center_y": .5}
 
                     ScrollView:
+                        id: horizontal_scroll
                         size_hint: .98, None
                         size: 0, "100dp"
                         do_scroll_y: False
@@ -436,6 +655,54 @@
                 md_bg_color: 0,0,0.3,1
                 size_hint: 1, 1
                 pos_hint: {"x": -1, "center_y": .5}
+
+                MDFloatLayout:
+                    size_hint: 1, 1
+                    
+                    ShoppingMap:
+                        id: shopping_map
+                        map_source: "my-map"
+                        lat: app.geo_cordinates[0]
+                        lon: app.geo_cordinates[1]
+                        zoom: 100
+                        pos_hint: {'center_x': .5}
+                        
+                    Card:
+                        id: product_list_layout
+                        size_hint: 1, None
+                        height: self.parent.height - search_bar_bg.height
+                        md_bg_color: "white"
+                        elevation: 1
+                        radius: "15dp", "15dp", 0, 0
+                        pos_hint: {'center_x': .5}
+                        y: 0
+
+                        MDFloatLayout:
+                            id: drag_handler
+                            size_hint: 1, None
+                            size: 0, "50dp"
+                            radius: "15dp", "15dp", 0, 0
+                            pos_hint: {"center_x": .5, 'top': 1}
+                            
+                            MDFloatLayout:
+                                size_hint: .2, None
+                                size: 0, "5dp"
+                                radius: "2.5dp"
+                                md_bg_color: .7,.7,.7,1
+                                pos_hint: {"center_x": .5, 'top': .6}
+
+                        MDScrollView:
+                            size_hint: 1, None
+                            height: product_list_layout.height - drag_handler.height
+                            pos_hint: {"center_x": .5, 'y': 0}
+
+                            MDBoxLayout:
+                                id: product_list_boxlayout
+                                adaptive_height: True
+                                pos_hint: {"center_x": .5}
+                                padding: "20dp"
+
+
             
             MDBoxLayout:
                 id: my_order_layout
@@ -445,7 +712,7 @@
 
         MDFloatLayout:
             id: navbar
-            md_bg_color: C("#dbf1db")
+            md_bg_color: C("#ffffff")
             size_hint: 1, None
             size: 0, "60dp"
             pos_hint: {"center_x": .5}
@@ -460,27 +727,28 @@
                 pos_hint: {"x": .05, "y": .05}
 
             MDFillRoundFlatIconButton:
-                id: login_btn
-                icon: "login" 
-                text: "Login" if not app.loggedin else "Cart"
-                pos_hint: {"center_x": .85, "center_y": .5}
-                md_bg_color: 1,1,1,1
+                id: location_btn
+                icon: "map-marker-radius" 
+                text: ""
+                pos_hint: {"right": .95, "center_y": .5}
+                md_bg_color: C("#dbf1db")
                 theme_text_color: "Custom"
                 theme_icon_color: "Custom"
-                icon_color: C('#202124')
-                text_color: C('#202124')
+                icon_color: C('#4CC955')
+                text_color: C('#4CC955')
                 size_hint: .2, .2
                 on_press: root.change_screen()
         
         MDFloatLayout:
             id: search_bar_bg
             size_hint: 1, None
-            md_bg_color: C("#dbf1db")
+            md_bg_color: C("#ffffff")
             height: search_bar.height+(search_bar.height/2)
             pos_hint: {"center_x": .5}
             y: navbar.y-self.height
         
         Card:
+            id: bottom_navbar
             md_bg_color: C('#ffffff')
             elevation: 1
             radius: "15dp", "15dp", 0, 0
@@ -578,6 +846,7 @@
             id: search_bar
             default_search_size_hint: .9, None
             default_search_size: 0, "40dp"
+            search_text_field_size: 0, "60dp"
             open_search_size_hint: 1, 1
             default_radius: "10dp"
             border_color: C("#4cb74c")
@@ -586,6 +855,8 @@
             search_view_color: "white"
             pos_hint: {'center_x': .5}
             center_y: search_bar_bg.center_y
+            on_search: root.search_product(shopping_layout, self.text)
+            on_right_btn_press: app.start_listening(self)
             
 <LoginScreen>
     MDFloatLayout:
@@ -742,3 +1013,296 @@
             pos_hint: {"center_x": .5, "center_y": .15}
             on_release: 
                 app.addproducts(product_img.source, product_name_input.text, product_price_input.text, unit_type_drop_down.current_item, category_drop_item.current_item)
+
+
+
+<OrderSummeryScreen>
+    md_bg_color: C("#ffffff")
+    MDFloatLayout:
+        size_hint: 1, 1
+        md_bg_color: C("#ffffff")
+
+        MDFloatLayout:
+            id: navbar
+            md_bg_color: 1,1,1,1
+            size_hint: 1, None
+            size: 0, "60dp"
+            pos_hint: {"center_x": .5}
+            y: self.parent.height-self.height
+
+            MDLabel:
+                text: "Order Summery"
+                font_size: "18dp"
+                bold: True
+                color: 0,0,0,1
+                x: back_btn.x + back_btn.width + dp(5)
+                pos_hint: {"center_y": .5}
+
+            
+            MDIconButton:
+                id: back_btn
+                icon: "arrow-left"
+                x: "5dp"
+                pos_hint: {"center_y": .5}
+                on_press: print(section_progress.ids.pos)
+        
+        SectionProgressBar:
+            id: section_progress
+            size_hint: .8, None
+            height: "50dp"
+            pos_hint: {"center_x": .5}
+            y: self.parent.height - (navbar.height+self.height+dp(10))
+
+            
+
+<AddAddressScreen>
+    MapView:
+        id: my_address_map
+        size_hint: 1, 1
+        height: self.parent.height 
+        pos_hint: {"center_x": .5, "center_y": .5}
+        lat: app.geo_cordinates[0]
+        lon: app.geo_cordinates[1]
+        zoom: 100
+        on_touch_up: if self.collide_point(*args[1].pos): root.add_pin(*args[1].pos)
+
+        MapMarker:
+            lat: app.geo_cordinates[0]
+            lon: app.geo_cordinates[1]
+            source: "assets/my_location.png"
+
+    MDFloatLayout:
+        id: processing_layout
+        size_hint: 1, None
+        height: my_address_map.height-dp(60)
+        md_bg_color: 0, 0, 0, 0
+
+        CirclarProgress:
+            id: circlarprogress
+            size_hint: None, None
+            size: "80dp", "80dp"
+            pos_hint: {'center_x': .5, 'center_y': .5}
+
+    ButtonLayout:
+        id: navbar
+        md_bg_color: 1,1,1,1
+        size_hint: 1, None
+        size: 0, "60dp"
+        pos_hint: {"center_x": .5}
+        y: self.parent.height-self.height
+
+        MDLabel:
+            id: title_bar_address_lb
+            text: "Pin Your Location"
+            font_size: "18dp"
+            bold: True
+            color: 0,0,0,1
+            x: back_btn.x + back_btn.width + dp(5)
+            pos_hint: {"center_y": .5}
+
+        
+        MDIconButton:
+            id: back_btn
+            icon: "arrow-left"
+            x: "5dp"
+            pos_hint: {"center_y": .5}
+            on_press: root.change_screen()
+
+    ButtonLayout:
+        id: address_layout
+        size_hint: 1, None
+        height: self.parent.height-navbar.height
+        md_bg_color:  1,1,1,1
+        y: 0-self.parent.height
+
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, .9
+            pos_hint: {"center_x": .5, "top": 1}
+
+            Widget:
+                size_hint: .1, .5
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                size: 0, "40dp"
+
+                Widget:
+                    id: space_refrence
+                    size_hint: .1, 1
+
+                ButtonLayout:
+                    orientation: 'horizontal'
+                    size_hint: 1, 1
+                    on_press: print("Address Layout")
+                    md_bg_color: C("#25A6FF")
+                    radius: "10dp"
+
+                    MDIcon:
+                        icon: "map-marker-radius"
+                        color: C('#ffffff')
+                        pos_hint: {"x": .15, "center_y": .5}
+
+                    MDLabel:
+                        text: "Pin Location"
+                        font_size: "18dp"
+                        bold: True
+                        halign: "center"
+                        color: C('#ffffff')
+                        pos_hint: {"x": 0, "center_y": .5}
+
+
+                Widget:
+                    size_hint: .1, 1
+
+            Widget:
+                size_hint: .1, .2
+            Widget:
+                size_hint: .1, 1
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                size: 0, "40dp"
+
+                Widget:
+                    id: space_refrence
+                    size_hint: .1, 1
+
+                MDTextField:
+                    id: name_input
+                    hint_text: "Name"
+                    input_type: "text"
+                    line_color_focus: C('#4CC955')
+                    hint_text_color_focus: C('#4CC955')
+                    text_color_focus: C('#4CC955')
+                    text_color_normal: C('#4CC955')
+
+                Widget:
+                    size_hint: .1, 1
+
+            Widget:
+                size_hint: .1, 1
+            
+            
+            
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                size: 0, "40dp"
+
+                Widget:
+                    id: space_refrence
+                    size_hint: .1, 1
+
+                MDTextField:
+                    id: house_input
+                    hint_text: "House No, Building Name"
+                    input_type: "text"
+                    line_color_focus: C('#4CC955')
+                    hint_text_color_focus: C('#4CC955')
+                    text_color_focus: C('#4CC955')
+                    text_color_normal: C('#4CC955')
+
+                Widget:
+                    size_hint: .1, 1
+
+            Widget:
+                size_hint: .1, 1
+            
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                size: 0, "40dp"
+
+                Widget:
+                    size_hint: .1, 1
+
+                MDTextField:
+                    id: street_input
+                    hint_text: "Street Name, Area"
+                    input_type: "text"
+                    line_color_focus: C('#4CC955')
+                    hint_text_color_focus: C('#4CC955')
+                    text_color_focus: C('#4CC955')
+                    text_color_normal: C('#4CC955')
+                
+                Widget:
+                    size_hint: .1, 1
+
+            Widget:
+                size_hint: .1, 1
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                size: 0, "40dp"
+
+                Widget:
+                    size_hint: None, 1
+                    width: space_refrence.width
+
+                MDTextField:
+                    id: state_input
+                    hint_text: "State"
+                    input_type: "text"
+                    line_color_focus: C('#4CC955')
+                    hint_text_color_focus: C('#4CC955')
+                    text_color_focus: C('#4CC955')
+                    text_color_normal: C('#4CC955')
+                
+                Widget:
+                    size_hint: None, 1
+                    width: space_refrence.width
+                
+                MDTextField:
+                    id: city_input
+                    hint_text: "City"
+                    input_type: "text"
+                    line_color_focus: C('#4CC955')
+                    hint_text_color_focus: C('#4CC955')
+                    text_color_focus: C('#4CC955')
+                    text_color_normal: C('#4CC955')
+
+                Widget:
+                    size_hint: None, 1
+                    width: space_refrence.width
+
+
+            Widget:
+                size_hint: .1, 1
+            
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                size: 0, "40dp"
+
+                Widget:
+                    size_hint: .1, 1
+
+                MDTextField:
+                    id: pincode_input
+                    hint_text: "PinCode"
+                    input_type: "number"
+                    line_color_focus: C('#4CC955')
+                    hint_text_color_focus: C('#4CC955')
+                    text_color_focus: C('#4CC955')
+                    text_color_normal: C('#4CC955')
+                    size_hint_x: .5
+                
+                Widget:
+                    size_hint: .1, 1
+
+            Widget:
+                size_hint: .1, 1
+
+
+        MDRaisedButton:
+            text: "Save"
+            md_bg_color: C('#4CC955')
+            size_hint_x: .9
+            pos_hint: {"center_x": .5, "center_y": .15}
+            on_release: 
+                app.saveaddress(name_input.text, house_input.text, street_input.text, state_input.text, city_input.text, pincode_input.text)
