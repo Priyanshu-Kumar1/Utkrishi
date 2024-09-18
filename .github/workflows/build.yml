@@ -126,6 +126,12 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
+      # Install pip dependencies
+      - name: Install garden and garden dependencies
+        run: |
+          pip install pip install kivy-garden
+          pip install kivy_garden.mapview
+
       # Build with Buildozer
       - name: Build with Buildozer
         id: buildozer
