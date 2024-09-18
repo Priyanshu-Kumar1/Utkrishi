@@ -22,7 +22,7 @@ from kivy.utils import get_color_from_hex as C
 from plyer import filechooser, gps
 from kivy.clock import mainthread, Clock
 from kivy.animation import Animation
-from kivy.garden.mapview import MapMarker, MapView
+from mapview import MapMarker, MapView
 from kivymd.uix.bottomsheet import MDBottomSheet
 from kivymd.uix.textfield import MDTextField
 from kivymd.font_definitions import theme_font_styles
