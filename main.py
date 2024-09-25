@@ -41,7 +41,6 @@ from Speechrecognizer import stt
 from CloudStorage import upload_file
 
 from kivy.core.window import Window
-Window.size = (380, 600)
 
 class LoadingDialogContent(MDFloatLayout):
     pass
