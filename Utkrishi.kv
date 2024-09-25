@@ -3,6 +3,24 @@
 #:import MapView mapview.MapView
 #:import MapSource mapview.MapSource
 
+<LoadingDialogContent>:
+    size_hint_y: None
+    height: dp(36)
+
+    MDSpinner:
+        id: spinner
+        size_hint: None, None
+        size: dp(36), dp(36)
+        active: True
+        color: 0, 0, 0, .7
+        pos_hint: {'x': .05}
+        y: self.parent.y + (self.parent.height / 2)
+        
+    MDLabel:
+        text: "Please wait"
+        y: self.parent.y + (self.parent.height / 2)
+        x: spinner.x + spinner.width + dp(30)
+
 <ButtonLayout>
     border_color: 0, 0, 0, 0
     FloatLayout:
@@ -14,6 +32,20 @@
             Line:
                 width: 1.5  # Border width
                 rectangle: self.x, self.y, self.width, self.height
+
+
+<BoxButtonLayout>
+    border_color: 0, 0, 0, 0
+    FloatLayout:
+        size_hint: 1, 1
+        pos_hint: {"center_x": .5, "center_y": .5}
+        canvas.before:
+            Color:
+                rgba: root.border_color  # Initial border color (transparent)
+            Line:
+                width: 1.5  # Border width
+                rectangle: self.x, self.y, self.width, self.height
+
 
         
 <IconListItem>
@@ -39,7 +71,6 @@
         pos_hint: {"center_x": .5, "center_y": .5}
 
 <ProductCard>
-    md_bg_color: c("#dbf1db")
     md_bg_color: C("#dbf1db")
     radius: "10dp"
     image: ""
@@ -81,7 +112,7 @@
             pos_hint: {'x': .05, 'center_y': .8}
         
         MDLabel:
-            text: "[b]₹"+root.product_price+"[/b][size=10]"+root.product_selling_unit+"[/size]"
+            text: "[b]₹"+root.product_price+"[/b]"+root.product_selling_unit
             halign: "left"
             markup: True
             pos_hint: {'x': .05, 'center_y': .6}
@@ -139,6 +170,319 @@
                 width: dp(40)
                 pos_hint: {"center_y": .5}
                 x: duration_icon.x + duration_icon.width + dp(5)
+    
+    MDBoxLayout:
+        size_hint: None, None
+        size: root.width, "60dp"
+        pos_hint: {'right': 1}
+        y: product_info_layout.y - self.height
+        padding: dp(10), dp(10), dp(10), dp(10)
+
+        MDBoxLayout:
+            spacing: dp(10) if item_count_layout.opacity == 1 else 0
+
+            MDBoxLayout:
+                id: item_count_layout
+                size_hint: None, 1
+                width: dp(0)
+                radius: "20dp"
+                pos_hint: {"center_y": .5}
+                opacity: 0
+
+                CardButton:
+                    id: del_item_btn
+                    width: "40dp"
+                    md_bg_color: C("#4CC955")
+                    on_release: 
+                        item_count_lb.text = str(int(item_count_lb.text)-1) if int(item_count_lb.text) > 0 else "0"
+
+                    MDIcon:
+                        id: del_icon
+                        icon: "minus" if int(item_count_lb.text) > 1 else "delete"
+                        font_size: "24dp"
+                        color: C("#ffffff")
+                        size_hint: None, None
+                        width: dp(10)
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        x: self.parent.x + dp(5)
+
+                MDFloatLayout:
+                    id: del_item_btn
+                    width: "40dp"
+                    md_bg_color: C("#ffffff")
+                    
+                    MDLabel:
+                        id: item_count_lb
+                        text: "0"
+                        font_size: "15dp"
+                        halign: "center"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_text: root.item_count = self.text
+
+                
+                CardButton:
+                    id: add_item_btn
+                    width: "40dp"
+                    md_bg_color: C("#4CC955")
+                    on_release: item_count_lb.text = str(int(item_count_lb.text)+1)
+
+                    MDIcon:
+                        id: add_icon
+                        icon: "plus"
+                        font_size: "24dp"
+                        color: C("#ffffff")
+                        size_hint: None, None
+                        width: dp(10)
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        x: self.parent.x + dp(5)
+
+            MDBoxLayout:
+                md_bg_color: C("#F6FDF6")
+
+                ButtonLayout:
+                    id: cart_btn
+                    on_release: root.add_to_cart(self, pickup_btn)
+
+                    MDIcon:
+                        id: cart_icon
+                        icon: "cart"
+                        font_size: "24dp"
+                        color: C("#4CC955")
+                        size_hint: None, None
+                        width: dp(10)
+                        pos_hint: {"center_y": .5}
+                        x: self.parent.x + dp(5)
+
+                    MDLabel:
+                        text: "Add to cart"
+                        font_size: "15dp"
+                        color: C("#4CC955")
+                        pos_hint: {"center_y": .5}
+                        x: cart_icon.x + cart_icon.width + dp(5)
+
+
+                Widget:
+                    size_hint: None, .6
+                    width: dp(1)
+                    pos_hint: {"center_y": .5}
+                    
+                    canvas.before:
+                        Color:
+                            rgba: C("#4CC955")
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: dp(1), dp(1), dp(1), dp(1)
+
+                ButtonLayout:
+                    id: pickup_btn
+
+                    MDIcon:
+                        id: heart_icon
+                        icon: "heart"
+                        font_size: "24dp"
+                        color: C("#4CC955")
+                        size_hint: None, None
+                        width: dp(10)
+                        pos_hint: {"center_y": .5}
+                        x: self.parent.x + dp(5)
+
+                    MDLabel:
+                        text: "Add to pickup list"
+                        font_size: "15dp"
+                        color: C("#4CC955")
+                        pos_hint: {"center_y": .5}
+                        x: heart_icon.x + heart_icon.width + dp(5)
+
+<CartProductCard>
+    md_bg_color: C("#dbf1db")
+    radius: "10dp"
+    image: ""
+    product_name: ""
+    product_price: ""
+    product_selling_unit: ""
+    distance: "20 km"
+    duration: "10 min"
+
+    AsyncImage:
+        id: product_img
+        source: root.image
+        size_hint: None, None
+        size: "100dp", "130dp"
+        radius: "10dp"
+        y: root.y + root.height - self.height - dp(10)
+        x: root.x + dp(10)
+        canvas.before:
+            Color:
+                rgba: 1,1,1,1
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: dp(10), dp(10), dp(10), dp(10)
+
+    MDFloatLayout:
+        id: product_info_layout
+        size_hint: None, None
+        size: self.parent.width - dp(130), "130dp"
+        md_bg_color: 1,1,1,.5
+        radius: "10dp"
+        y: root.y + root.height - self.height - dp(10)
+        x: product_img.x + product_img.width + dp(10)
+
+
+        MDLabel:
+            text: root.product_name
+            halign: "left"
+            pos_hint: {'x': .05, 'center_y': .8}
+        
+        MDLabel:
+            text: "[b]₹"+root.product_price+"[/b]"+root.product_selling_unit
+            halign: "left"
+            markup: True
+            pos_hint: {'x': .05, 'center_y': .6}
+
+
+    MDBoxLayout:
+        size_hint: None, None
+        size: "120dp", "30dp"
+        md_bg_color: C("#dbf1db")
+        radius: "10dp", 0, 0, 0
+        pos_hint: {'right': 1}
+        y: product_info_layout.y
+        padding: dp(5), dp(5), dp(5), dp(5)
+
+        MDFloatLayout:
+            size_hint: None, None
+            adaptive_height: True
+            adaptive_width: True
+            pos_hint: {'x': 0, 'center_y': .5}
+
+            MDIcon:
+                id: distance_icon
+                icon: "road-variant"
+                font_size: "12dp"
+                color: C("#4CC955")
+                size_hint: None, None
+                width: dp(10)
+                pos_hint: {"x": 0, "center_y": .5}
+
+            MDLabel:
+                id: distance_lb
+                text: root.distance
+                font_size: "12dp"
+                size_hint: None, None
+                width: dp(40)
+                color: C("#4CC955")
+                pos_hint: {"center_y": .5}
+                x: distance_icon.x + distance_icon.width + dp(5)
+            
+            MDIcon:
+                id: duration_icon
+                icon: "clock"
+                font_size: "12dp"
+                color: C("#4CC955")
+                size_hint: None, None
+                width: dp(10)
+                pos_hint: {"center_y": .5}
+                x: distance_lb.x + distance_lb.width + dp(1)
+
+            MDLabel:
+                text: root.duration
+                font_size: "12dp"
+                color: C("#4CC955")
+                size_hint: None, None
+                width: dp(40)
+                pos_hint: {"center_y": .5}
+                x: duration_icon.x + duration_icon.width + dp(5)
+    
+    MDBoxLayout:
+        size_hint: None, None
+        size: root.width, "60dp"
+        pos_hint: {'right': 1}
+        y: product_info_layout.y - self.height
+        padding: dp(10), dp(10), dp(10), dp(10)
+
+        MDBoxLayout:
+            spacing: dp(10)
+
+            MDBoxLayout:
+                id: cart_item_count_layout
+                size_hint: None, 1
+                width: dp(100)
+                radius: "20dp"
+                pos_hint: {"center_y": .5}
+                opacity: 1
+
+                CardButton:
+                    id: cart_del_item_btn
+                    width: "40dp"
+                    md_bg_color: C("#4CC955")
+                    on_release: 
+                        cart_item_count_lb.text = str(int(cart_item_count_lb.text)-1) if int(cart_item_count_lb.text) > 0 else "0"
+
+                    MDIcon:
+                        id: cart_del_icon
+                        icon: "minus" if int(cart_item_count_lb.text) > 1 else "delete"
+                        font_size: "24dp"
+                        color: C("#ffffff")
+                        size_hint: None, None
+                        width: dp(10)
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        x: self.parent.x + dp(5)
+
+                MDFloatLayout:
+                    id: cart_del_item_btn
+                    width: "40dp"
+                    md_bg_color: C("#ffffff")
+                    
+                    MDLabel:
+                        id: cart_item_count_lb
+                        text: root.item_count
+                        font_size: "15dp"
+                        halign: "center"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_text: root.item_count = self.text
+
+                
+                CardButton:
+                    id: add_item_btn
+                    width: "40dp"
+                    md_bg_color: C("#4CC955")
+                    on_release: cart_item_count_lb.text = str(int(cart_item_count_lb.text)+1)
+
+                    MDIcon:
+                        id: cart_add_icon
+                        icon: "plus"
+                        font_size: "24dp"
+                        color: C("#ffffff")
+                        size_hint: None, None
+                        width: dp(10)
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        x: self.parent.x + dp(5)
+
+            MDBoxLayout:
+                md_bg_color: C("#F6FDF6")
+
+                ButtonLayout:
+                    id: delete_btn
+                    on_release: root.delete_card()
+
+                    MDIcon:
+                        id: delete_icon
+                        icon: "delete"
+                        font_size: "24dp"
+                        color: C("#4CC955")
+                        size_hint: None, None
+                        width: self.parent.width - dp(130)
+                        pos_hint: {"center_y": .5}
+                        x: self.parent.x + dp(5)
+
+                    MDLabel:
+                        text: "Delete"
+                        font_size: "15dp"
+                        color: C("#4CC955")
+                        pos_hint: {"center_y": .5}
+                        x: delete_icon.x + delete_icon.width + dp(5)
 
 <SectionProgressBar>
     current_section: first_section
@@ -646,10 +990,205 @@
             
             MDBoxLayout:
                 id: cart_layout
-                md_bg_color: 0,0,0.3,1      
+                md_bg_color: 1,1,1,1      
                 size_hint: 1, 1
                 pos_hint: {"x": 1, "center_y": .5}
-            
+
+                MDFloatLayout:
+                    size_hint: 1, 1
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                    MDLabel:
+                        id: cart_title_lb
+                        text: "My Cart"
+                        font_size: "18dp"
+                        size_hint_y: None
+                        height: "16dp"
+                        pos_hint: {"x": .05}
+                        y: navbar.y - self.height - dp(10)
+
+                    MDScrollView:
+                        id: cart_list_layout
+                        size_hint: 1, None
+                        do_scroll_x: False
+                        do_scroll_y: True
+                        height: self.parent.height - navbar.height - bottom_navbar.height - dp(24)
+                        pos_hint: {"center_x": .5}
+                        y: cart_title_lb.y - self.height
+
+                        MDBoxLayout:
+                            id: cart_list
+                            orientation: 'vertical'
+                            adaptive_height: True
+                            pos_hint: {"center_x": .5}
+                            padding: "20dp"
+                            spacing: "20dp"
+
+                            
+                    
+
+            MDFloatLayout:
+                id: account_layout
+                md_bg_color: 1,1,1,1
+                size_hint: 1, 1
+                pos_hint: {"x": -2, "center_y": .5}
+
+                MDFloatLayout:
+                    size_hint: 1, None
+                    height: self.parent.height - search_bar_bg.height - navbar.height - bottom_navbar.height
+                    pos_hint: {"center_x": .5}
+                    y: navbar.y - self.height
+
+                    MDFloatLayout:
+                        id: user_info_layout
+                        size_hint: .9, None
+                        height: "150dp"
+                        pos_hint: {"center_x": .5, "top": 1}
+
+                        MDLabel:
+                            text: f"Hello,"
+                            font_size: "32dp"
+                            bold: True
+                            color: C("#4CC955")
+                            adaptive_height: True
+                            pos_hint: {"x": 0, "top": .9}
+
+                        MDLabel:
+                            id: user_name_lb
+                            text: ""
+                            font_size: "32dp"
+                            bold: True
+                            color: C("#4CC955")
+                            adaptive_height: True
+                            pos_hint: {"x": 0, "center_y": .5}      
+
+
+                    MDFloatLayout:
+                        id: address_info_layout
+                        size_hint: .9, None
+                        height: "150dp"
+                        radius: "15dp"
+                        pos_hint: {"center_x": .5}
+                        y: user_info_layout.y - self.height - dp(20)
+
+                        canvas.before:
+                            Color:
+                                rgba: C("#4CC955")  # Initial border color (transparent)
+                            Line:
+                                dash_offset: 2
+                                dash_length: 10
+                                rounded_rectangle: (*self.pos, *self.size, *self.radius)
+
+                        MDFloatLayout:
+                            id: address_title_layout
+                            size_hint: .4, None
+                            height: "30dp"
+                            radius: "15dp"
+                            md_bg_color: C("#dbf1db")
+                            x: self.parent.x + dp(5)
+                            y: self.parent.y + self.parent.height - self.height - dp(5)
+
+                            MDLabel:
+                                text: "Your Address"
+                                font_size: "14dp"
+                                bold: True
+                                halign: "center"
+                                color: C("#4CC955")
+                                pos_hint: {"x": 0, "center_y": .5}
+
+                        MDLabel:
+                            id: user_address_lb
+                            text: str(app.user.address)
+                            font_size: "15dp"
+                            bold: True
+                            color: C("#4CC955")
+                            valign: "top"
+                            x: self.parent.x + dp(5)
+                            y: address_title_layout.y - self.height - dp(5)
+                            size_hint: .55, .7                         
+                        
+                        MDFloatLayout:
+                            size_hint: .4, .9
+                            radius: "15dp"
+                            pos_hint: {"right": .98, "center_y": .5}
+
+                            MapView:
+                                id: user_map
+                                map_source: "my-map"
+                                lat: app.geo_cordinates[0]
+                                lon: app.geo_cordinates[1]
+                                zoom: 18
+                                size_hint: 1, 1
+                                radius: "15dp"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+
+                                MapMarker:
+                                    lat: app.geo_cordinates[0]
+                                    lon: app.geo_cordinates[1]
+                                    source: "assets/my_location.png"
+
+                    MDBoxLayout:
+                        size_hint: 1, None
+                        height: "40dp"
+                        pos_hint: {"center_x": .5}
+                        y: address_info_layout.y - self.height - dp(20)
+
+                        Widget:
+                            size_hint: .1, 1
+
+                        CardButton:
+                            radius: "15dp"
+                            md_bg_color: 1,1,1,1
+                            elevation: 1
+                            on_release: root.show_layout(my_order_layout)
+
+                            MDIcon:
+                                id: my_order_icon
+                                icon: "package-variant-closed"
+                                pos_hint: {"center_y": .5}
+                                size_hint_x: None
+                                font_size: "20dp"
+                                color: C("#4CC955")
+                                x: self.parent.x + dp(10)
+
+                            MDLabel:
+                                text: "My Orders"
+                                pos_hint: {"center_y": .5}
+                                font_size: "14dp"
+                                color: C("#4CC955")
+                                x: my_order_icon.x + my_order_icon.width + dp(10)
+
+                        Widget:
+                            size_hint: .1, 1
+
+                        CardButton:
+                            radius: "15dp"
+                            md_bg_color: 1,1,1,1
+                            elevation: 1
+                            on_release: root.change_screen("AddAddressScreen")
+
+                            MDIcon:
+                                id: add_address_icon
+                                icon: "map-marker-radius"
+                                pos_hint: {"center_y": .5}
+                                size_hint_x: None
+                                font_size: "20dp"
+                                color: C("#4CC955")
+                                x: self.parent.x + dp(10)
+
+                            MDLabel:
+                                text: "Add address"
+                                pos_hint: {"center_y": .5}
+                                font_size: "14dp"
+                                color: C("#4CC955")
+                                x: add_address_icon.x + add_address_icon.width + dp(10)
+
+                        Widget:
+                            size_hint: .1, 1
+
+
+
+
             MDBoxLayout:
                 id: shopping_layout
                 md_bg_color: 0,0,0.3,1
@@ -692,15 +1231,19 @@
                                 pos_hint: {"center_x": .5, 'top': .6}
 
                         MDScrollView:
+                            id: product_list_scroll
                             size_hint: 1, None
-                            height: product_list_layout.height - drag_handler.height
-                            pos_hint: {"center_x": .5, 'y': 0}
+                            height: product_list_layout.height - drag_handler.height - navbar.height
+                            pos_hint: {"center_x": .5}
+                            y: drag_handler.y - self.height
 
                             MDBoxLayout:
                                 id: product_list_boxlayout
+                                orientation: 'vertical'
                                 adaptive_height: True
                                 pos_hint: {"center_x": .5}
                                 padding: "20dp"
+                                spacing: "20dp"
 
 
             
@@ -710,34 +1253,6 @@
                 size_hint: 1, 1
                 pos_hint: {"x": -2, "center_y": .5}
 
-        MDFloatLayout:
-            id: navbar
-            md_bg_color: C("#ffffff")
-            size_hint: 1, None
-            size: 0, "60dp"
-            pos_hint: {"center_x": .5}
-            y: self.parent.height-self.height
-
-            MDLabel:
-                id: test_lb
-                text: "Utkrishi"
-                font_size: "18dp"
-                bold: True
-                color: 0,0,0,1
-                pos_hint: {"x": .05, "y": .05}
-
-            MDFillRoundFlatIconButton:
-                id: location_btn
-                icon: "map-marker-radius" 
-                text: ""
-                pos_hint: {"right": .95, "center_y": .5}
-                md_bg_color: C("#dbf1db")
-                theme_text_color: "Custom"
-                theme_icon_color: "Custom"
-                icon_color: C('#4CC955')
-                text_color: C('#4CC955')
-                size_hint: .2, .2
-                on_press: root.change_screen()
         
         MDFloatLayout:
             id: search_bar_bg
@@ -842,6 +1357,27 @@
 
                 Widget:
                     size_hint: 1, 1
+                
+                NavButton:
+                    id: account_btn
+                    icon: "account"
+                    icon_color: C("#949399") if account_layout.x != 0 else C('#4CC955')
+                    icon_size: "22dp" if account_layout.x != 0 else "32dp"
+                    pos_hint: {"center_x": .7, "center_y": .5}
+
+                    ButtonLayout:
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_press: 
+                            account_btn.elevation = 1
+                            account_btn.icon_size = "18dp"
+                            root.show_layout(account_layout)
+
+                        on_release: 
+                            account_btn.elevation = 2
+                            account_btn.icon_size = "22dp" if account_layout.x != 0 else "32dp"
+
+                Widget:
+                    size_hint: 1, 1
         SearchBar:
             id: search_bar
             default_search_size_hint: .9, None
@@ -857,7 +1393,36 @@
             center_y: search_bar_bg.center_y
             on_search: root.search_product(shopping_layout, self.text)
             on_right_btn_press: app.start_listening(self)
-            
+            on_focus: root.search_focus(*args)
+
+        MDFloatLayout:
+            id: navbar
+            md_bg_color: C("#ffffff")
+            size_hint: 1, None
+            size: 0, "60dp"
+            pos_hint: {"center_x": .5}
+            y: self.parent.height-self.height
+
+            MDLabel:
+                id: test_lb
+                text: "Utkrishi"
+                font_size: "18dp"
+                bold: True
+                color: 0,0,0,1
+                pos_hint: {"x": .05, "y": .05}
+
+            MDFillRoundFlatIconButton:
+                id: location_btn
+                icon: "map-marker-radius" 
+                text: ""
+                pos_hint: {"right": .95, "center_y": .5}
+                md_bg_color: C("#dbf1db")
+                theme_text_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: C('#4CC955')
+                text_color: C('#4CC955')
+                size_hint: .2, .2
+
 <LoginScreen>
     MDFloatLayout:
         size_hint: 1, 1
@@ -911,14 +1476,7 @@
                 size_hint: None, None
                 size: "250dp", "32dp"
                 pos_hint: {"x": .1, "center_y": .45}
-
-            MDDropDownItem:
-                id: drop_item
-                pos_hint: {'x': .1, 'center_y': .35}
-                text: 'Select Your Login Type'
-                on_release: app.menu.open()
-
-        
+  
 
             MDRaisedButton:
                 text: "Login"
@@ -928,6 +1486,103 @@
                 on_release: 
                     root.login(email_input.text, password_input.text)
                     app.loggedin = True
+
+<SignUpScreen>
+    MDFloatLayout:
+        size_hint: 1, 1
+
+        MDLabel:
+            id: signup_lb
+            text: "Sign Up"
+            bold: True
+            color: C('#4CC955')
+            font_size: "33dp"
+            pos_hint: {"center_x": .55, "center_y": .87}
+
+        MDIconButton:
+            icon: "arrow-left"
+            x: signup_lb.x - 20
+            pos_hint: {"center_y": .95}
+            on_press: root.change_screen()
+
+        MDFloatLayout:
+            size_hint: 1, 1
+
+            MDIcon:
+                icon: "account"
+                pos_hint: {"x": .02, "center_y": .75}
+
+            MDTextField:
+                id: name_input
+                hint_text: "Enter your name..."
+                line_color_focus: C('#4CC955')
+                hint_text_color_focus: C('#4CC955')
+                text_color_focus: C('#4CC955')
+                text_color_normal: C('#4CC955')
+                size_hint: None, None
+                size: "250dp", "32dp"
+                pos_hint: {"x": .1, "center_y": .75}
+
+            MDIcon:
+                icon: "email"
+                pos_hint: {"x": .02, "center_y": .65}
+
+            MDTextField:
+                id: email_input
+                hint_text: "Enter your email address..."
+                line_color_focus: C('#4CC955')
+                hint_text_color_focus: C('#4CC955')
+                text_color_focus: C('#4CC955')
+                text_color_normal: C('#4CC955')
+                size_hint: None, None
+                size: "250dp", "32dp"
+                pos_hint: {"x": .1, "center_y": .65}
+
+            MDIcon:
+                icon: "phone"
+                pos_hint: {"x": .02, "center_y": .55}
+
+            MDTextField:
+                id: phone_no_input
+                hint_text: "Enter your phone number..."
+                line_color_focus: C('#4CC955')
+                hint_text_color_focus: C('#4CC955')
+                text_color_focus: C('#4CC955')
+                text_color_normal: C('#4CC955')
+                size_hint: None, None
+                size: "250dp", "32dp"
+                pos_hint: {"x": .1, "center_y": .55}
+
+            MDIcon:
+                icon: "key"
+                pos_hint: {"x": .02, "center_y": .45}
+
+            MDTextField:
+                id: password_input
+                hint_text: "Enter your password..."
+                line_color_focus: C('#4CC955')
+                hint_text_color_focus: C('#4CC955')
+                text_color_focus: C('#4CC955')
+                text_color_normal: C('#4CC955')
+                password: True
+                size_hint: None, None
+                size: "250dp", "32dp"
+                pos_hint: {"x": .1, "center_y": .45}
+
+            MDDropDownItem:
+                id: drop_item
+                pos_hint: {'x': .1, 'center_y': .35}
+                text: 'Select Your Account Type'
+                on_release: app.menu.open()
+
+            MDRaisedButton:
+                text: "Sign Up"
+                md_bg_color: C('#4CC955')
+                size_hint_x: .9
+                pos_hint: {"center_x": .5, "center_y": .15}
+                on_release: 
+                    root.signup(name_input.text, email_input.text, phone_no_input.text, password_input.text, drop_item.current_item)
+
 
 <AddProductsScreen>
     MDFloatLayout:
@@ -1060,6 +1715,7 @@
         id: my_address_map
         size_hint: 1, 1
         height: self.parent.height 
+        map_source: "my-map"
         pos_hint: {"center_x": .5, "center_y": .5}
         lat: app.geo_cordinates[0]
         lon: app.geo_cordinates[1]
@@ -1305,4 +1961,4 @@
             size_hint_x: .9
             pos_hint: {"center_x": .5, "center_y": .15}
             on_release: 
-                app.saveaddress(name_input.text, house_input.text, street_input.text, state_input.text, city_input.text, pincode_input.text)
+                app.saveaddress(name_input.text, house_input.text, street_input.text, city_input.text, state_input.text, pincode_input.text)

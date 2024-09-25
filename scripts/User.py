@@ -1,9 +1,12 @@
 class User():
-    def __init__(self, name=None, email=None, address=None, username=None, user_type=None):
+    def __init__(self, name=None, phone= None, email=None, address=None, username=None, user_type=None):
         self.name = name
+        self.phone = phone
         self.email = email
+        self.password = email
         self.username = username
         self.type = user_type
+        self.uid = None
         self.country = None
         self.state = None
         self.city = None

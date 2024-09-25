@@ -56,12 +56,11 @@ kv = '''
         IconBtn:
             icon: root.left_icon
             _left_icon: root.left_icon
+            theme_icon_color: 'Custom'
             icon_color: root.left_icon_color
             pos_hint: {'x': .01, 'center_y': .5}
             size_hint: None, None
             size: "30dp", "30dp"
-            theme_text_color: 'Custom'
-            text_color: 0, 0, 0, 1
             on_release: root.close_search_view()
             
         TextInput:
@@ -75,9 +74,9 @@ kv = '''
             input_type: "text"
             keyboard_suggestions: True
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
-            on_touch_up: if self.collide_point(*args[1].pos): root.on_input_focus(self)
             on_text_validate: root.searched()
             on_text: root.text = self.text
+            on_focus: root.trigger_on_focus(*args)
 
         IconBtn:
             icon: root.right_icon
@@ -135,6 +134,12 @@ class SearchBar(MDFloatLayout, EventDispatcher):
         # Dispatch the on_search event
         self.dispatch('on_search')
 
+    def trigger_on_focus(self, *args):
+        if args[-1]:
+            self.on_input_focus()
+        # Dispatch the on_search event
+        self.dispatch('on_focus', args)
+
     def trigger_left_btn_function(self):
         # Dispatch the on_search event
         self.dispatch('on_left_btn_press')
@@ -147,13 +152,21 @@ class SearchBar(MDFloatLayout, EventDispatcher):
         super(SearchBar, self).__init__(**kwargs)
         # Register the on_search event, which can be overridden in KV
         self.register_event_type('on_search')
+        self.register_event_type('on_focus')
         self.register_event_type('on_left_btn_press')
         self.register_event_type('on_right_btn_press')
         self.open = False
         self.touch_count = 0
 
 
+    def on_text(self, *args):
+        self.children[-1].children[1].text = self.text
+
+
     def on_search(self, *args):
+        pass  # Will be overridden in KV
+
+    def on_focus(self, *args):
         pass  # Will be overridden in KV
 
     def on_left_btn_press(self, *args):
@@ -165,7 +178,7 @@ class SearchBar(MDFloatLayout, EventDispatcher):
     def on_right_icon_color(self, *args):
         self.children[-1].children[-1].icon_color= self.right_icon_color
 
-    def on_input_focus(self, input_field):
+    def on_input_focus(self):
 
         if self.touch_count == 0:
 

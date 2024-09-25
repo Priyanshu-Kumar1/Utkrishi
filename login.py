@@ -18,26 +18,35 @@ firebase_admin.initialize_app(cred, {
 
 def check_user(email):
     try:
-        auth.get_user_by_email(email)
+        user = auth.get_user_by_email(email)
+        return user
     
     except auth.UserNotFoundError:
         return False #returns false if user not found
     
-    else:
-        return True #returns true if user found
+
+def login(email, password):
+
+    if check_user(email):
+        user = auth.get_user_by_email(email)
+
+        return user
+        
+    return None
+
     
 def sign_up(email, password):
     
     if check_user(email):
         user = auth.get_user_by_email(email)
-        
+
+        return user
         
     
     else:
         user = auth.create_user(email= email, password = password)
         store(user.email, user.uid)
-        
-        
+     
         
     return user
         
