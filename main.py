@@ -889,7 +889,7 @@ class Utkrishi(MDApp):
     def on_location(self, **kwargs):
         self.geo_cordinates = (kwargs['lat'], kwargs['lon'])
         
-        lat_lon_to_city_thread = Thread(target=self.get_city, args=(kwargs))
+        lat_lon_to_city_thread = Thread(target=self.get_city, args=(kwargs['lat'], kwargs['lon']))
         lat_lon_to_city_thread.start()
         
         self.gps_location = '\n'.join([
@@ -904,8 +904,8 @@ class Utkrishi(MDApp):
     def on_resume(self, **kwargs):  
         gps.start()
 
-    def get_city(self, **kwargs):
-        city = get_address(kwargs['lat'], kwargs['lon'])["city"]
+    def get_city(self, lat, lon):
+        city = get_address(lat, lon)["city"]
         self.show_city(city)
 
     @mainthread
