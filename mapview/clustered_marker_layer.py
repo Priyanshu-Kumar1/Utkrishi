@@ -16,7 +16,7 @@ from kivy.properties import (
     StringProperty,
 )
 
-from kivy_garden.mapview.view import MapLayer, MapMarker
+from mapview.view import MapLayer, MapMarker
 
 Builder.load_string(
     """

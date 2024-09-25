@@ -14,7 +14,7 @@ import requests
 from kivy.clock import Clock
 from kivy.logger import LOG_LEVELS, Logger
 
-from kivy_garden.mapview.constants import CACHE_DIR
+from mapview.constants import CACHE_DIR
 
 if "MAPVIEW_DEBUG_DOWNLOADER" in environ:
     Logger.setLevel(LOG_LEVELS['debug'])

@@ -17,8 +17,8 @@ import threading
 from kivy.core.image import Image as CoreImage
 from kivy.core.image import ImageLoader
 
-from kivy_garden.mapview.downloader import Downloader
-from kivy_garden.mapview.source import MapSource
+from mapview.downloader import Downloader
+from mapview.source import MapSource
 
 
 class MBTilesMapSource(MapSource):
