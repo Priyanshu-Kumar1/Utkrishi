@@ -108,6 +108,8 @@
 
         MDLabel:
             text: root.product_name
+            font_name: root.font_name
+            font_script_name: root.font_script_name
             halign: "left"
             pos_hint: {'x': .05, 'center_y': .8}
         
@@ -332,6 +334,8 @@
 
         MDLabel:
             text: root.product_name
+            font_name: root.font_name
+            font_script_name: root.font_script_name
             halign: "left"
             pos_hint: {'x': .05, 'center_y': .8}
         
@@ -611,8 +615,10 @@
         size_hint: 1, 1
 
         MDLabel:
-            text: "Select Language"
+            text: app.Select_Language[app.language]
             font_size: "24dp"
+            font_name: app.lang_font
+            font_script_name: app.lang_script
             bold: True
             color: C('#4CC955')
             pos_hint: { "center_y": .9}
@@ -622,12 +628,12 @@
             orientation: 'horizontal'
             size_hint: 1, None
             size: 0, "100dp"
-            pos_hint: {"center_y": .7}
+            pos_hint: {"center_y": .75}
 
             Widget:
                 size_hint: 1, 1
 
-            ButtonLayout:
+            LanguageButton:
                 id: tamil_lang_btn
                 md_bg_color: C("#d9e9f8")
                 size_hint: None, 1
@@ -637,7 +643,8 @@
                     eng_lang_btn.border_color = 0,0,0,0
                     hindi_lang_btn.border_color = 0,0,0,0
                     tal_lang_btn.border_color = 0,0,0,0
-                    app.language = "Tamil"
+                    app.change_language("ta")
+                    next_screen_btn.disabled = False
 
                 MDLabel:
                     text: "Tamil"
@@ -672,7 +679,7 @@
             Widget:
                 size_hint: 1, 1
 
-            ButtonLayout:
+            LanguageButton:
                 id: eng_lang_btn
                 md_bg_color: C("#dbf1db")
                 size_hint: None, None
@@ -682,7 +689,8 @@
                     tamil_lang_btn.border_color = 0,0,0,0
                     hindi_lang_btn.border_color = 0,0,0,0
                     tal_lang_btn.border_color = 0,0,0,0
-                    app.language = "English"
+                    app.change_language("en")
+                    next_screen_btn.disabled = False
 
                 MDLabel:
                     text: "English"
@@ -706,12 +714,12 @@
             orientation: 'horizontal'
             size_hint: 1, None
             size: 0, "100dp"
-            pos_hint: {"center_y": .5}
+            pos_hint: {"center_y": .5625}
 
             Widget:
                 size_hint: 1, 1
 
-            ButtonLayout:
+            LanguageButton:
                 id: hindi_lang_btn
                 md_bg_color: C("#fdf2d2")
                 size_hint: None, None
@@ -722,7 +730,8 @@
                     eng_lang_btn.border_color = 0,0,0,0
                     tamil_lang_btn.border_color = 0,0,0,0
                     tal_lang_btn.border_color = 0,0,0,0
-                    app.language = "Hindi"
+                    app.change_language("hi")
+                    next_screen_btn.disabled = False
                 
                 MDLabel:
                     text: "Hindi"
@@ -756,7 +765,7 @@
             Widget:
                 size_hint: 1, 1
             
-            ButtonLayout:
+            LanguageButton:
                 id: tal_lang_btn
                 md_bg_color: C("#bae5eb")
                 size_hint: None, None
@@ -767,7 +776,8 @@
                     eng_lang_btn.border_color = 0,0,0,0
                     tamil_lang_btn.border_color = 0,0,0,0
                     hindi_lang_btn.border_color = 0,0,0,0
-                    app.language = "Telugu"
+                    app.change_language("te")
+                    next_screen_btn.disabled = False
                 
                 MDLabel:
                     text: "Telugu"
@@ -800,11 +810,118 @@
             Widget:
                 size_hint: 1, 1
 
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            size: 0, "100dp"
+            pos_hint: {"center_y": .3}
+
+            Widget:
+                size_hint: 1, 1
+
+            LanguageButton:
+                id: bang_lang_btn
+                md_bg_color: C("#fdd2d2")
+                size_hint: None, 1
+                size: "125dp", "100dp"
+                on_press: 
+                    self.border_color = C("#f42121")
+                    eng_lang_btn.border_color = 0,0,0,0
+                    hindi_lang_btn.border_color = 0,0,0,0
+                    tal_lang_btn.border_color = 0,0,0,0
+                    or_lang_btn.border_color = 0,0,0,0
+                    app.change_language("bn")
+                    next_screen_btn.disabled = False
+
+                MDLabel:
+                    text: "Bangla"
+                    font_size: "14dp"
+                    color: C("#f42121")
+                    adaptive_height: True
+                    pos_hint: {"x": .1, "top": .95}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "ক"
+                    font_name: "assets/fonts/Bengali_font.ttf"
+                    font_script_name: "Beng"
+                    font_size: "24dp"
+                    color: C("#f42121")
+                    halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "বাংলা "
+                    font_name: "assets/fonts/Bengali_font.ttf"
+                    font_script_name: "Beng"
+                    font_size: "14dp"
+                    color: C("#f42121")
+                    adaptive_height: True
+                    halign: "right"
+                    size_hint_x: .8
+                    pos_hint: {"center_x": .5, "y": .05}
+                    padding: "15db"
+
+            Widget:
+                size_hint: 1, 1
+
+            LanguageButton:
+                id: or_lang_btn
+                md_bg_color: C("#e4dbdb")
+                size_hint: None, None
+                size: "125dp", "100dp"
+                on_press: 
+                    self.border_color = C("#855b5b")
+                    tamil_lang_btn.border_color = 0,0,0,0
+                    hindi_lang_btn.border_color = 0,0,0,0
+                    tal_lang_btn.border_color = 0,0,0,0
+                    bang_lang_btn.border_color = 0,0,0,0
+                    app.change_language("or")
+                    next_screen_btn.disabled = False
+
+                MDLabel:
+                    text: "Oriya"
+                    font_size: "14dp"
+                    color: C("#855b5b")
+                    adaptive_height: True
+                    pos_hint: {"x": .1, "top": .95}
+                    padding: "15db"
+
+                MDLabel:
+                    text: "ଅ"
+                    font_name: "assets/fonts/Oriya_font.ttf"
+                    font_script_name: "Orya"
+                    font_size: "24dp"
+                    color: C("#855b5b")
+                    halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                MDLabel:
+                    text: "ଓଡିଆ "
+                    font_name: "assets/fonts/Oriya_font.ttf"
+                    font_script_name: "Orya"
+                    font_size: "14dp"
+                    color: C("#855b5b")
+                    adaptive_height: True
+                    halign: "right"
+                    size_hint_x: .8
+                    pos_hint: {"center_x": .5, "y": .05}
+                    padding: "15db"
+
+            Widget:
+                size_hint: 1, 1
+
+
         MDRaisedButton:
-            text: "Next"
+            id: next_screen_btn
+            text: app.Next[app.language]
+            font_name: app.lang_font
+            font_script_name: app.lang_script
             md_bg_color: C('#4CC955')
             size_hint_x: .9
             pos_hint: {"center_x": .5, "center_y": .1}
+            disabled: True
             on_release: root.change_screen()
 
 
@@ -854,7 +971,9 @@
                             radius: "15dp"
 
                             MDLabel:
-                                text: "Deal Of The Day"
+                                text: app.Deal_Of_The_Day[app.language]
+                                font_name: app.lang_font
+                                font_script_name: app.lang_script
                                 color: C("#ffffff")
                                 bold: True
                                 font_size: "33dp"
@@ -893,7 +1012,9 @@
                                     radius: "15dp"
 
                                     MDLabel:
-                                        text: "Veggies & Fruits"
+                                        text: app.Veggies__Fruits[app.language]
+                                        font_name: app.lang_font
+                                        font_script_name: app.lang_script
                                         color: C("#ffffff")
                                         bold: True
                                         font_size: "22dp"
@@ -919,7 +1040,9 @@
                                     radius: "15dp"
 
                                     MDLabel:
-                                        text: "Dairy Products"
+                                        text: app.Dairy_Products[app.language]
+                                        font_name: app.lang_font
+                                        font_script_name: app.lang_script
                                         color: C("#ffffff")
                                         bold: True
                                         font_size: "22dp"
@@ -946,7 +1069,9 @@
                                     radius: "15dp"
 
                                     MDLabel:
-                                        text: "Medicines"
+                                        text: app.Medicines[app.language]
+                                        font_name: app.lang_font
+                                        font_script_name: app.lang_script
                                         color: C("#ffffff")
                                         bold: True
                                         font_size: "22dp"
@@ -973,7 +1098,9 @@
                                     radius: "15dp"
 
                                     MDLabel:
-                                        text: "Grocery"
+                                        text: app.Grocery[app.language]
+                                        font_name: app.lang_font
+                                        font_script_name: app.lang_script
                                         color: C("#ffffff")
                                         bold: True
                                         font_size: "22dp"
@@ -1001,6 +1128,8 @@
                     MDLabel:
                         id: cart_title_lb
                         text: "My Cart"
+                        font_name: app.lang_font
+                        font_script_name: app.lang_script
                         font_size: "18dp"
                         size_hint_y: None
                         height: "16dp"
@@ -1046,7 +1175,9 @@
                         pos_hint: {"center_x": .5, "top": 1}
 
                         MDLabel:
-                            text: f"Hello,"
+                            text: app.Hello[app.language]
+                            font_name: app.lang_font
+                            font_script_name: app.lang_script
                             font_size: "32dp"
                             bold: True
                             color: C("#4CC955")
@@ -1089,7 +1220,9 @@
                             y: self.parent.y + self.parent.height - self.height - dp(5)
 
                             MDLabel:
-                                text: "Your Address"
+                                text: app.Your_Address[app.language]
+                                font_name: app.lang_font
+                                font_script_name: app.lang_script
                                 font_size: "14dp"
                                 bold: True
                                 halign: "center"

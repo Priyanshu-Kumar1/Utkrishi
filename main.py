@@ -7,7 +7,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.lang import Builder
 from kivy.metrics import dp
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty, DictProperty
 from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.label import MDLabel, MDIcon
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -33,14 +33,19 @@ from functools import partial
 
 from scripts.cordinate_to_address import get_address
 from scripts.DistanceCalc import get_distance
+from scripts.translator import translate_text
 from scripts.User import User
 from scripts import local_db
 from login import login, sign_up
 import database as db
+
+import json
+
 from Speechrecognizer import stt
 from CloudStorage import upload_file
 
 from kivy.core.window import Window
+#Window.size = (380, 600)
 
 class LoadingDialogContent(MDFloatLayout):
     pass
@@ -80,6 +85,9 @@ class BoxButtonLayout(ButtonBehavior, MDBoxLayout):
 class ButtonLayout(ButtonBehavior, MDFloatLayout):
     pass
 
+class LanguageButton(ButtonLayout):
+    pass
+
 class NavButton(ButtonLayout):
     pass
 
@@ -92,6 +100,8 @@ class ProductCard(ButtonLayout, StencilView):
     duration = StringProperty()
     item_count = StringProperty()
     list_type = StringProperty()
+    font_name = StringProperty()
+    font_script_name = StringProperty()
 
     def trigger_quantity_changed(self, *args):
         # Dispatch the on_search event
@@ -110,6 +120,7 @@ class ProductCard(ButtonLayout, StencilView):
                 self.ids.pickup_btn.size_hint_x = 1
                 self.ids.pickup_btn.opacity = 1
         self.trigger_quantity_changed(self.item_count)
+        print("product_name", type(self.product_name))
 
     def on_quantity_changed(self, *args):
         pass
@@ -136,6 +147,8 @@ class CartProductCard(ButtonLayout, StencilView):
     duration = StringProperty()
     item_count = StringProperty("0")
     list_type = StringProperty()
+    font_name = StringProperty()
+    font_script_name = StringProperty()
 
     def on_item_count(self, *args):
         if self.item_count == "0":
@@ -146,7 +159,6 @@ class CartProductCard(ButtonLayout, StencilView):
             self.parent.ids[self.card_id] = None
             self.parent.remove_widget(self)
             app.cart.pop(self.card_id)
-
 
 class SectionProgressBar(ButtonLayout, MDFloatLayout):
     current_section = None
@@ -179,11 +191,13 @@ class LanguageSelectionScreen(MDScreen):
 
         self.auto_login()
 
-
     def auto_login(self):
         login_data = local_db.get_auto_login_data()
         if login_data:
             Clock.schedule_once(lambda x: self.loading_dialog.open(), 1)
+            app.language = login_data["language"]
+            app.lang_font = app.fonts[app.language]
+            app.lang_script = app.lang_scripts[app.language]
             app.user.email = login_data["email"]
             app.user.name = login_data["name"]
             app.user.phone = login_data["phone"]
@@ -214,6 +228,7 @@ class LanguageSelectionScreen(MDScreen):
         self.manager.current = "main"
 
 class MainScreen(MDScreen):
+
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self._initial_touch_y = None
@@ -303,6 +318,9 @@ class MainScreen(MDScreen):
         try:
             my_location_marker = MapMarker(lat=app.geo_cordinates[0], lon=app.geo_cordinates[1], source='assets/my_location.png', size_hint=[None,None], size=["50dp", "50dp"])
             self.ids.shopping_map.add_marker(my_location_marker)
+
+            if app.user.latitude and app.user.longitude:
+                self.ids.user_map.center_on(app.user.latitude, app.user.longitude)
 
             if app.user.uid == None and self.ids.get("login_card") == None:
                 login_card = CardButton(
@@ -470,8 +488,7 @@ class MainScreen(MDScreen):
         print(scroll_pos)
         anim = Animation(scroll_y = scroll_pos, duration=.1)
         anim.start(product_list_scroll)
-
-                    
+            
     @mainthread
     def add_product_to_list(self, product_id, *args):
         self.product_list_layout = self.ids.product_list_layout
@@ -479,9 +496,11 @@ class MainScreen(MDScreen):
         product = self.product_details[product_id]
         product_card = ProductCard(
             image= product["url"],
-            product_name= product["product name"],
+            product_name= translate_text(product["product name"], app.language),
             product_price= product["price"],
             product_selling_unit= "[size="+str(round(dp(10)))+"]"+product["unit_type"]+"[/size]",
+            font_name = app.lang_font,
+            font_script_name = app.lang_script,
             distance= product["distance"],
             duration= product["duration"],
             size_hint= [None, None],
@@ -519,9 +538,11 @@ class MainScreen(MDScreen):
             cart_product_card = CartProductCard(
                 card_id= product_id,
                 image= product_details_dict["url"],
-                product_name= product_details_dict["product name"],
+                product_name= translate_text(product_details_dict["product name"], app.language),
                 product_price= product_details_dict["price"],
                 product_selling_unit= "[size="+str(round(dp(10)))+"]"+product_details_dict["unit_type"]+"[/size]",
+                font_name = app.lang_font,
+                font_script_name = app.lang_script,
                 item_count = str(product_dict["quantity"]),
                 size_hint= [None, None],
                 distance= product_details_dict["distance"],
@@ -643,6 +664,7 @@ class LoginScreen(MDScreen):
             app.user.type = userdata["type"]
             app.user.uid = loggeduser.uid
             local_login_data = {
+                "language": app.language,
                 "email": email,
                 "password": password,
                 "name": userdata["name"],
@@ -696,6 +718,7 @@ class SignUpScreen(MDScreen):
         app.user.name = name
         app.user.type = acctype
         local_login_data = {
+            "language": app.language,
             "email": email,
             "password": password,
             "name": name,
@@ -704,6 +727,7 @@ class SignUpScreen(MDScreen):
             "uid": signeduser.uid,
         }
         fbdb_login_data = {
+            "language": app.language,
             "email": email,
             "name": name,
             "phone": phone,
@@ -737,10 +761,47 @@ class Utkrishi(MDApp):
     previous_screen = "main"
     cart = {}
     is_auto_loging = False
+    language = StringProperty("en")
+    lang_script = StringProperty("Latn")
+    lang_font = StringProperty("Roboto")
+    
+
+    fonts = {
+        "en": "Roboto",
+        "hi": "assets/fonts/Hindi_font.ttf",
+        "ta": "assets/fonts/Tamil_font.ttf",
+        "te": "assets/fonts/Telugu_font.ttf",
+        "bn": "assets/fonts/Bengali_font.ttf",
+        "or": "assets/fonts/Oriya_font.ttf"
+    }
+
+    lang_scripts = {
+        "en": "Latn",
+        "hi": "Deva",
+        "ta": "Taml",
+        "te": "Telu",
+        "bn": "Beng",
+        "or": "Orya"
+    }
+
+
+    json_file = open("translations.json", "r", encoding="utf-8")
+    translations = json.load(json_file)
+
+    att_list = translations.keys()
+
+    for att, translations_dict in translations.items():
+        new_att = att.replace(" ", "_")
+        new_att = new_att.replace("&", "")
+        new_att = new_att.replace(".", "")
+        new_att = new_att.replace(",", "_")
+
+        if new_att not in ["[b]\u20b9", "0"]:
+            exec(f"{new_att} = DictProperty(translations_dict)")
+
     def build(self):
         self.geo_cordinates = (12.8168653, 80.0396097)
         Builder.load_file("Utkrishi.kv")
-        self.language = "English"
         sm.add_widget(LanguageSelectionScreen(name = 'LanguageSelectionScreen'))
         sm.add_widget(MainScreen(name = 'main'))
         sm.add_widget(LoginScreen(name = 'login'))
@@ -900,7 +961,7 @@ class Utkrishi(MDApp):
     def on_status(self, stype, status):
         self.gps_status = 'type={}\n{}'.format(stype, status)
 
-    def on_resume(self, **kwargs):  
+    def on_resume(self, **kwargs):
         gps.start()
 
     def get_city(self, lat, lon):
@@ -1053,6 +1114,11 @@ class Utkrishi(MDApp):
         # if the recognizer service stops, change UI
         if not stt.listening:
             self.stop_listening()
+
+    def change_language(self, language):
+        self.language = language
+        self.lang_script = self.lang_scripts[language]
+        self.lang_font = self.fonts[language]
 
     def update(self):
         self.speech_rec_results = stt.results[0]
