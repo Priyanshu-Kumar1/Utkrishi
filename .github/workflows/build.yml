@@ -34,6 +34,10 @@ jobs:
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
 
+      - name: Clone python-for-android
+        run: |
+          git clone https://github.com/kivy/python-for-android.git
+
       # clearingup some space to build
       - name: Clearingup some space to build
         run: |
@@ -125,10 +129,6 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
-
-      - name: Clone python-for-android
-        run: |
-          git clone https://github.com/kivy/python-for-android.git
 
       # Build with Buildozer
       - name: Build with Buildozer
