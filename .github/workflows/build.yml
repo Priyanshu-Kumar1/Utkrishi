@@ -126,6 +126,10 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
+      - name: Clone python-for-android
+        run: |
+          git clone https://github.com/kivy/python-for-android.git
+
       # Build with Buildozer
       - name: Build with Buildozer
         id: buildozer
