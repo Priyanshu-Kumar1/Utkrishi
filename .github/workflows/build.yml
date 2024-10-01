@@ -33,12 +33,6 @@ jobs:
           path: .buildozer
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
-
-      - name: Clone python-for-android
-        run: |
-          git clone https://github.com/kivy/python-for-android.git
-          sed -i 's|https://download.savannah.gnu.org/releases/freetype/freetype-{version}.tar.gz|https://sourceforge.net/projects/freetype/files/freetype2/{version}/freetype-{version}.tar.gz|' python-for-android/pythonforandroid/recipes/freetype/__init__.py
-
       # clearingup some space to build
       - name: Clearingup some space to build
         run: |
@@ -124,6 +118,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.11' #set your python version
+
+
+      - name: Clone python-for-android
+        run: |
+          git clone https://github.com/kivy/python-for-android.git
+          sed -i 's|https://download.savannah.gnu.org/releases/freetype/freetype-{version}.tar.gz|https://sourceforge.net/projects/freetype/files/freetype2/{version}/freetype-{version}.tar.gz|' python-for-android/pythonforandroid/recipes/freetype/__init__.py
+
 
       # Install pip dependencies
       - name: Install pip dependencies
