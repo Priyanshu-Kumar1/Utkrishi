@@ -37,6 +37,7 @@ jobs:
       - name: Clone python-for-android
         run: |
           git clone https://github.com/kivy/python-for-android.git
+          sed -i 's|https://download.savannah.gnu.org/releases/freetype/freetype-{version}.tar.gz|https://sourceforge.net/projects/freetype/files/freetype2/{version}/freetype-{version}.tar.gz|' python-for-android/pythonforandroid/recipes/freetype/__init__.py
 
       # clearingup some space to build
       - name: Clearingup some space to build
