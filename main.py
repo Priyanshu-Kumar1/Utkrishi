@@ -29,11 +29,10 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.font_definitions import theme_font_styles
 from threading import Thread
 from functools import partial
-
+from google.transliteration import transliterate_word
 
 from scripts.cordinate_to_address import get_address
 from scripts.DistanceCalc import get_distance
-from scripts.translator import translate_text
 from scripts.User import User
 from scripts import local_db
 from login import login, sign_up
@@ -45,7 +44,49 @@ from Speechrecognizer import stt
 from CloudStorage import upload_file
 
 from kivy.core.window import Window
-#Window.size = (380, 600)
+#Window.size = (380, 700)
+
+
+class UserLocationMap(ButtonBehavior, MDFloatLayout):
+    mapview = ObjectProperty()
+    marker = ObjectProperty()
+
+
+    def center_on(self, lat, lon):
+        self.mapview = self.ids.map_view
+        self.mapview.center_on(lat, lon)
+        if self.marker == None:
+            self.marker = MapMarker(lat=lat, lon=lon, source='assets/marker.png', size_hint=[None,None])
+            self.mapview.add_marker(self.marker)
+        else:
+            self.mapview.remove_marker(self.marker)
+            self.marker = MapMarker(lat=lat, lon=lon, source='assets/marker.png', size_hint=[None,None])
+            self.mapview.add_marker(self.marker)
+        
+
+    def on_press(self):
+        self.canvas.ask_update()
+        self.disabled_layer = self.ids.disabled_layer
+        disabled_layer_opacity_anim = Animation(opacity=1, duration=.2)
+        disabled_layer_opacity_anim.start(self.disabled_layer)
+
+    def on_touch_up(self, touch):
+        self.disabled_layer = self.ids.disabled_layer
+        disabled_layer_opacity_anim = Animation(opacity=0, duration=.2)
+        disabled_layer_opacity_anim.start(self.disabled_layer)
+
+class UserLocationMapView(MapView):
+    touched = False
+    def on_touch_down(self, touch):
+        self.canvas.ask_update()
+        self.touched = True
+        return False  # Do not handle the touch event, making the map unresponsive to touches
+
+    def on_touch_move(self, touch):
+        return False  # Disable map dragging
+
+    def on_touch_up(self, touch):
+        return False  # Ignore touch release
 
 class LoadingDialogContent(MDFloatLayout):
     pass
@@ -79,7 +120,7 @@ class Card(CommonElevationBehavior, MDFloatLayout):
 class CardButton(ButtonBehavior, Card):
     pass
 
-class BoxButtonLayout(ButtonBehavior, MDBoxLayout):
+class FABButton(ButtonBehavior, Card):
     pass
 
 class ButtonLayout(ButtonBehavior, MDFloatLayout):
@@ -120,7 +161,6 @@ class ProductCard(ButtonLayout, StencilView):
                 self.ids.pickup_btn.size_hint_x = 1
                 self.ids.pickup_btn.opacity = 1
         self.trigger_quantity_changed(self.item_count)
-        print("product_name", type(self.product_name))
 
     def on_quantity_changed(self, *args):
         pass
@@ -159,6 +199,37 @@ class CartProductCard(ButtonLayout, StencilView):
             self.parent.ids[self.card_id] = None
             self.parent.remove_widget(self)
             app.cart.pop(self.card_id)
+
+class OrderProductCard(ButtonLayout, StencilView):
+    product_name = StringProperty()
+    product_price = StringProperty()
+    image = StringProperty()
+    product_selling_unit = StringProperty()
+    item_count = StringProperty()
+    list_type = StringProperty()
+    font_name = StringProperty("Roboto")
+    font_script_name = StringProperty("Latn")
+
+    def trigger_quantity_changed(self, *args):
+        # Dispatch the on_search event
+        self.dispatch('on_quantity_changed', *args)
+
+    def __init__(self, **kwargs):
+        super(OrderProductCard, self).__init__(**kwargs)
+        self.register_event_type('on_quantity_changed')
+
+    def on_item_count(self, *args):
+        if self.item_count == "0":
+            self.ids.item_count_layout.opacity = 0
+            self.ids.item_count_layout.width = 0
+            if self.list_type == "cart":
+                self.ids.cart_btn.size_hint_x = 1
+                self.ids.pickup_btn.size_hint_x = 1
+                self.ids.pickup_btn.opacity = 1
+        self.trigger_quantity_changed(self.item_count)
+
+    def on_quantity_changed(self, *args):
+        pass
 
 class SectionProgressBar(ButtonLayout, MDFloatLayout):
     current_section = None
@@ -212,6 +283,10 @@ class LanguageSelectionScreen(MDScreen):
                 app.user.state = address_data['state']
                 app.user.city = address_data['city']
                 app.user.pincode = address_data['pincode']
+
+            if login_data.get("cart"):
+                app.cart = login_data["cart"]
+
             login_thread = Thread(target=self.login_thread, args=(login_data["email"], login_data["password"]))
             login_thread.start()
 
@@ -261,10 +336,19 @@ class MainScreen(MDScreen):
     def on_touch_up(self, touch):
         self._initial_touch_y = None
         self._initial_layout_y = None
+        if self.ids.drag_handler.collide_point(*touch.pos):
+            product_list_layout = self.ids.product_list_layout
+            drag_high_limit = self.ids.search_bar_bg.y
+            drag_low_limit = 0-(self.height/2)-(self.height/4.5)
+            if touch.y>=self.center_y:
+                list_up_anim = Animation(y = 0, duration=.1)
+                list_up_anim.start(product_list_layout)
+            print(touch.y>=self.center_y)
 
     def show_layout(self, layout):
         layout.pos_hint= {'x': 0}
         navbar = self.ids.navbar
+        self.ids.add_product_btn.pos_hint= {'right': .95}
         for i in self.ids.main_layout.children:
             if(i != layout):
                 i.pos_hint= {'x': 1}
@@ -286,6 +370,7 @@ class MainScreen(MDScreen):
                     self.navbar_down_anim.start(navbar)
 
                 if i == self.ids.cart_layout:
+                    self.ids.add_product_btn.pos_hint= {'right': -1}
                     search_bar_up_anim = Animation(y=self.height, duration=.1)
                     search_bar_up_anim.start(self.ids.search_bar_bg)
 
@@ -313,8 +398,14 @@ class MainScreen(MDScreen):
             height = dp(55),
         )
         if app.user.name:
-            self.ids.user_name_lb.text = app.user.name.split(" ")[0]
+            self.ids.user_name_lb.text = transliterate_word(app.user.name.split(" ")[0], lang_code=app.language)[0]
         self.ids.user_address_lb.text = str(app.user.address)
+
+        if app.cart:
+            self.ids.total_price_lb.text = "Total Price: ₹"+str(app.cart["total_price"])
+            for product_id in app.cart:
+                if product_id != "total_price":
+                    self.add_product_to_cart_layout(product_id)
         try:
             my_location_marker = MapMarker(lat=app.geo_cordinates[0], lon=app.geo_cordinates[1], source='assets/my_location.png', size_hint=[None,None], size=["50dp", "50dp"])
             self.ids.shopping_map.add_marker(my_location_marker)
@@ -447,7 +538,7 @@ class MainScreen(MDScreen):
         self.ids.product_list_boxlayout.clear_widgets()
         anim = Animation(y = (0-(self.height/2)), duration=.1)
         anim.start(self.product_list_layout)
-        Thread1 = Thread(target=self.get_products, args=(search_text, shopping_layout))
+        Thread1 = Thread(target=self.get_products, args=(search_text.strip(), shopping_layout))
         Thread1.start()
 
     def get_products(self, search_text, shopping_layout):
@@ -496,7 +587,7 @@ class MainScreen(MDScreen):
         product = self.product_details[product_id]
         product_card = ProductCard(
             image= product["url"],
-            product_name= translate_text(product["product name"], app.language),
+            product_name= transliterate_word(product["product name"], lang_code=app.language)[0],
             product_price= product["price"],
             product_selling_unit= "[size="+str(round(dp(10)))+"]"+product["unit_type"]+"[/size]",
             font_name = app.lang_font,
@@ -526,6 +617,10 @@ class MainScreen(MDScreen):
             "price_for_quantity": price_for_quantity,
             }
         
+        app.cart["total_price"] = sum([v["price_for_quantity"] for k, v in app.cart.items() if k != "total_price"])
+        
+        local_db.store(app.user.uid, {"cart": app.cart})
+        
         self.add_product_to_cart_layout(product_id)
         
     #cart layout functions
@@ -538,7 +633,7 @@ class MainScreen(MDScreen):
             cart_product_card = CartProductCard(
                 card_id= product_id,
                 image= product_details_dict["url"],
-                product_name= translate_text(product_details_dict["product name"], app.language),
+                product_name= transliterate_word(product_details_dict["product name"], lang_code=app.language)[0],
                 product_price= product_details_dict["price"],
                 product_selling_unit= "[size="+str(round(dp(10)))+"]"+product_details_dict["unit_type"]+"[/size]",
                 font_name = app.lang_font,
@@ -751,7 +846,16 @@ class AddProductsScreen(MDScreen):
         self.manager.current = "main"
 
 class OrderSummeryScreen(MDScreen):
-    pass
+    def on_enter(self):
+        self.loading_dialog = MDDialog(
+            type="custom",
+            content_cls=LoadingDialogContent(),
+            auto_dismiss=False,
+            height = dp(55),
+        )
+
+    def change_screen(self, screen="main"):
+        self.manager.current = screen
 
 sm = ScreenManager(transition=NoTransition())
 
@@ -972,40 +1076,6 @@ class Utkrishi(MDApp):
     def show_city(self, city):
         sm.get_screen('main').ids.location_btn.text = city
 
-    def auto_login(self):
-        login_data = local_db.get_auto_login_data()
-        if login_data:
-            self.is_auto_loging = True
-            self.user.email = login_data["email"]
-            self.user.name = login_data["name"]
-            self.user.phone = login_data["phone"]
-            self.user.type = login_data["type"]
-            self.user.uid = login_data["uid"]
-            self.user.address = login_data.get("address")
-            if self.user.address:
-                address_data = login_data["address"]
-                self.user.address = address_data['address_name']
-                self.user.latitude = address_data['latitude']
-                self.user.longitude = address_data['longitude']
-                self.user.state = address_data['state']
-                self.user.city = address_data['city']
-                self.user.pincode = address_data['pincode']
-            login_thread = Thread(target=self.login_thread, args=(login_data["email"], login_data["password"]))
-            login_thread.start()
-        else:
-            sm.current = "LanguageSelectionScreen"
-
-    def login_thread(self, email, password):
-        loggeduser = login(email, password)
-        if loggeduser:
-            pass
-        else:
-            self.auto_login_change_screen("SignUpScreen")
-
-    @mainthread
-    def auto_login_change_screen(self, screen):
-        sm.get_screen('LanguageSelectionScreen').show_loading_dialog()
-
     def set_login_item(self, text_item):
         sm.get_screen('SignUpScreen').ids.drop_item.set_item(text_item)
         self.user.type = text_item
@@ -1025,8 +1095,9 @@ class Utkrishi(MDApp):
         filechooser.open_file(on_selection=self.file_handle_selection, filters=[("Comma-separated Values", "*.png","*.jpeg","*.jpg",)])
 
     def file_handle_selection(self, selection):
-        self.selection = selection[0]
-        sm.get_screen('addproducts').ids.product_img.source = selection[0]
+        if len(selection) > 0:
+            self.selection = selection[0]
+            sm.get_screen('addproducts').ids.product_img.source = selection[0]
 
     def on_selection(self, *a, **k):
         

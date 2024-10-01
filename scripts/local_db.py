@@ -1,7 +1,7 @@
 import json
 
 
-def store(uid, data):
+def store(uid, data: dict):
     with open("user_db.json", "r") as file:
         file_data = json.load(file)
 
@@ -32,7 +32,7 @@ def get_email(uid):
     
     return None
 
-def store_login(data):
+def store_login(data: dict):
     data = {
         "auto_login": True,
         "auto_login_uid": data['uid'],
