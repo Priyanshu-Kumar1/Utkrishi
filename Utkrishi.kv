@@ -1688,7 +1688,7 @@
                         on_release: 
                             account_btn.elevation = 2
                             account_btn.icon_size = "22dp" if account_layout.x != 0 else "32dp"
-                            user_map.center_on(app.user.latitude, app.user.longitude)
+                            user_map.center_on(app.user.latitude, app.user.longitude) if (app.user.latitude or app.user.longitude) else None
 
                 Widget:
                     size_hint: 1, 1
