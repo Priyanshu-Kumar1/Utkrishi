@@ -1027,6 +1027,7 @@ class Utkrishi(MDApp):
                 Permission.ACCESS_FINE_LOCATION,
                 Permission.ACCESS_COARSE_LOCATION,
                 Permission.RECORD_AUDIO,
+                Permission.READ_MEDIA_IMAGES,
             ])
             
             gps.configure(on_location=self.on_location, on_status=self.on_status)
