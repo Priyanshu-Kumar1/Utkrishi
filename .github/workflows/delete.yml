@@ -1,0 +1,17 @@
+name: Delete old artifacts
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs daily at midnight
+
+jobs:
+  delete_artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List and delete all artifacts
+        run: |
+          artifacts=$(gh api repos/Priyanshu-Kumar1/Utkrishi/actions/artifacts | jq '.artifacts | .[] | .id')
+          for artifact in $artifacts; do
+            echo "Deleting artifact ID $artifact"
+            gh api --method DELETE repos/Priyanshu-Kumar1/Utkrishi/actions/artifacts/$artifact
+          done
