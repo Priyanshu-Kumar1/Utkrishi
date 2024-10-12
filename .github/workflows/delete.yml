@@ -14,19 +14,17 @@ jobs:
 
       - name: Authenticate with GitHub CLI
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh auth login --with-token <<< $GH_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo $GITHUB_TOKEN | gh auth login --with-token
 
       - name: List all artifacts
         id: list-artifacts
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api -X GET /repos/${{ github.repository }}/actions/artifacts \
           | jq -r '.artifacts[] | select(.expired == false) | .id' > artifacts.txt
 
       - name: Delete artifacts
-        if: ${{ steps.list-artifacts.outputs.artifacts }}
         run: |
           for artifact_id in $(cat artifacts.txt); do
             gh api -X DELETE /repos/${{ github.repository }}/actions/artifacts/${artifact_id}
