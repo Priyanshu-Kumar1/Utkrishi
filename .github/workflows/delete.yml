@@ -9,16 +9,13 @@ jobs:
   delete-artifacts:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up GitHub CLI
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
 
       - name: Authenticate with GitHub CLI
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo $GH_TOKEN | gh auth login --with-token
+        run: gh auth login --with-token <<< $GH_TOKEN
 
       - name: List all artifacts
         id: list-artifacts
