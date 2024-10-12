@@ -1,17 +1,23 @@
-name: Delete old artifacts
+name: Delete Artifacts
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Runs daily at midnight
+    - cron: "0 0 * * 0" # Runs every Sunday at midnight
+  workflow_dispatch:
 
 jobs:
-  delete_artifacts:
+  delete-artifacts:
     runs-on: ubuntu-latest
     steps:
-      - name: List and delete all artifacts
+      - name: List all artifacts
+        id: list-artifacts
         run: |
-          artifacts=$(gh api repos/Priyanshu-Kumar1/Utkrishi/actions/artifacts | jq '.artifacts | .[] | .id')
-          for artifact in $artifacts; do
-            echo "Deleting artifact ID $artifact"
-            gh api --method DELETE repos/Priyanshu-Kumar1/Utkrishi/actions/artifacts/$artifact
+          gh api -X GET /repos/${{ github.repository }}/actions/artifacts \
+          | jq -r '.artifacts[] | select(.expired == false) | .id' > artifacts.txt
+
+      - name: Delete artifacts
+        if: ${{ steps.list-artifacts.outputs.artifacts }}
+        run: |
+          for artifact_id in $(cat artifacts.txt); do
+            gh api -X DELETE /repos/${{ github.repository }}/actions/artifacts/${artifact_id}
           done
