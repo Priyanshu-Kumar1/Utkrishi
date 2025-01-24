@@ -7,28 +7,24 @@ Utkrishi is a platform designed to empower farmers and connect them directly wit
 
 ## **Table of Contents**
 1. [Screenshorts](#screenshorts)  
-1. [About the Project](#about-the-project)  
-2. [Key Features](#key-features)  
-3. [Technologies Used](#technologies-used)  
-4. [System Architecture](#system-architecture)  
-5. [Installation](#installation)  
-6. [Usage](#usage)  
-7. [Contributing](#contributing)  
-8. [License](#license)  
-9. [Contact](#contact)
+2. [About the Project](#about-the-project)  
+3. [Key Features](#key-features)  
+4. [Technologies Used](#technologies-used)  
+5. [System Architecture](#system-architecture)  
+6. [Installation](#installation)  
+7. [Usage](#usage)  
+8. [Contributing](#contributing)  
+9. [License](#license)  
+10. [Contact](#contact)
 
 ---
 
 ## **Screenshorts**
-![Presplash Screen](screenshots/Presplash.jpg)
-
-![Language Selection Screen](screenshots/Lang.jpg)
-
-![Home Screen](screenshots/Presplash.jpg)
-
-![Search Screen](screenshots/Search.jpg)
-
-![Account Screen](screenshots/Account.jpg)
+<img src="https://github.com/user-attachments/assets/d723ffd0-b421-4b75-922c-9b099e546bee" alt="Presplash" width="100" height="222.29">
+<img src="https://github.com/user-attachments/assets/356e1a62-d08f-4399-a9e3-8858ff01182d" alt="Language Selection" width="100" height="222.29">
+<img src="https://github.com/user-attachments/assets/1e36498b-be33-4ba3-87c9-1613f070dcfc" alt="Home" width="100" height="222.29">
+<img src="https://github.com/user-attachments/assets/b83c469e-0b8b-46a5-878e-b6e737126078" alt="Search" width="100" height="222.29">
+<img src="https://github.com/user-attachments/assets/3e605e30-abeb-46bf-8fb6-9c62a46a7e78" alt="Account" width="100" height="222.29">
 
 ## **About the Project**
 
